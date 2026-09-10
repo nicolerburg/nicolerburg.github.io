@@ -6,7 +6,8 @@
   <meta name="theme-color" content="#f7eee9">
   <meta name="robots" content="noindex, nofollow">
   <title>Soft Toy Collection</title>
-  <link rel="stylesheet" href="./assets/styles.css?v=20260910-2">
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="./assets/styles.css?v=20260910-6">
 </head>
 <body>
   <div class="page-shell">
@@ -21,22 +22,42 @@
       <label class="search-field">
         <span class="sr-only">Search collection</span>
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m21 21-4.2-4.2m1.2-5.3a6.5 6.5 0 1 1-13 0 6.5 6.5 0 0 1 13 0Z"/></svg>
-        <input id="searchInput" type="search" placeholder="Search by name, brand, or fact…" autocomplete="off">
+        <input id="searchInput" type="search" placeholder="Search by name, species, location, relative, or fact…" autocomplete="off">
       </label>
-      <label class="sort-field">
-        <span>Sort</span>
-        <select id="sortSelect">
-          <option value="added-desc">Newest to collection</option>
-          <option value="added-asc">Oldest to collection</option>
-          <option value="name-asc">Name A–Z</option>
-        </select>
-      </label>
+      <div class="toolbar-actions">
+        <label class="sort-field">
+          <span>Sort</span>
+          <select id="sortSelect">
+            <option value="added-desc">Newest to collection</option>
+            <option value="added-asc">Oldest to collection</option>
+            <option value="name-asc">Name A–Z</option>
+          </select>
+        </label>
+        <div class="filter-menu-wrap">
+          <button id="filterButton" class="filter-button" type="button" aria-expanded="false" aria-controls="filterPanel">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M7 12h10M10 18h4"/></svg>
+            <span>Filters</span>
+            <span id="filterCount" class="filter-count" hidden>0</span>
+          </button>
+          <section id="filterPanel" class="filter-panel" aria-label="Collection filters" hidden>
+            <div class="filter-panel-head">
+              <div>
+                <div class="filter-panel-kicker">show me</div>
+                <h2>Filter the collection</h2>
+              </div>
+              <button id="clearFilters" class="clear-filters" type="button">Clear all</button>
+            </div>
+            <div id="filterGroups" class="filter-groups"></div>
+          </section>
+        </div>
+        <div class="collection-summary" aria-live="polite">
+          <span id="collectionCount">0 soft toys</span>
+          <span class="tiny-flower" aria-hidden="true">✿</span>
+        </div>
+      </div>
     </section>
 
-    <div class="collection-summary" aria-live="polite">
-      <span id="collectionCount">0 soft toys</span>
-      <span class="tiny-flower" aria-hidden="true">✿</span>
-    </div>
+    <div id="activeFilterChips" class="active-filter-chips" aria-live="polite"></div>
 
     <main>
       <div id="collectionGrid" class="collection-grid"></div>
@@ -48,7 +69,7 @@
       <section id="noResults" class="empty-state" hidden>
         <div class="empty-face" aria-hidden="true">૮ ˶ᵔ ᵕ ᵔ˶ ა</div>
         <h2>No matching friends</h2>
-        <p>Try a different search.</p>
+        <p>Try a different search or adjust your filters.</p>
       </section>
     </main>
 
@@ -64,6 +85,6 @@
     <div id="dialogContent"></div>
   </dialog>
 
-  <script src="./assets/collection.js?v=20260910-2" defer></script>
+  <script src="./assets/collection.js?v=20260910-6" defer></script>
 </body>
 </html>

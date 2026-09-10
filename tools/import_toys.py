@@ -67,15 +67,53 @@ def validate_photo_settings(entry: dict, manifest: Path) -> None:
                 )
 
 
+def validate_flexible_date(value: object, manifest: Path, field_name: str, required: bool = False) -> None:
+    if value is None:
+        if required:
+            raise ValueError(f"{manifest.name}: {field_name} is required")
+        return
+    if not isinstance(value, dict) or value.get("precision") not in {"day", "month", "year"} or not value.get("value"):
+        raise ValueError(f"{manifest.name}: {field_name} is invalid")
+
+
 def validate_entry(entry: dict, manifest: Path) -> None:
     required = ["id", "name", "imageFile", "dateAdded"]
     missing = [key for key in required if not entry.get(key)]
     if missing:
         raise ValueError(f"{manifest.name}: missing required field(s): {', '.join(missing)}")
 
-    date_added = entry.get("dateAdded")
-    if not isinstance(date_added, dict) or date_added.get("precision") not in {"day", "month", "year"} or not date_added.get("value"):
-        raise ValueError(f"{manifest.name}: dateAdded is invalid")
+    validate_flexible_date(entry.get("dateAdded"), manifest, "dateAdded", required=True)
+
+    collection_status = entry.get("collectionStatus")
+    if collection_status is not None:
+        if not isinstance(collection_status, dict):
+            raise ValueError(f"{manifest.name}: collectionStatus must be an object")
+        state = collection_status.get("state", "active")
+        if state not in {"active", "lost", "memory"}:
+            raise ValueError(f"{manifest.name}: collectionStatus.state must be active, lost, or memory")
+        last_known = collection_status.get("lastKnownLocation")
+        if last_known is not None and not isinstance(last_known, str):
+            raise ValueError(f"{manifest.name}: collectionStatus.lastKnownLocation must be text")
+        validate_flexible_date(collection_status.get("endDate"), manifest, "collectionStatus.endDate")
+
+    relatives = entry.get("relatives", [])
+    if relatives is not None:
+        if not isinstance(relatives, list):
+            raise ValueError(f"{manifest.name}: relatives must be a list")
+        for index, relative in enumerate(relatives, start=1):
+            if not isinstance(relative, dict):
+                raise ValueError(f"{manifest.name}: relative #{index} must be an object")
+            relationship = relative.get("relationship")
+            toy_id = relative.get("toyId")
+            if not isinstance(relationship, str) or not relationship.strip():
+                raise ValueError(f"{manifest.name}: relative #{index} needs a relationship")
+            if not isinstance(toy_id, str) or not toy_id.strip():
+                raise ValueError(f"{manifest.name}: relative #{index} needs a toyId")
+
+    for optional_text in ("species", "spawnLocation"):
+        value = entry.get(optional_text, "")
+        if value is not None and not isinstance(value, str):
+            raise ValueError(f"{manifest.name}: {optional_text} must be text")
 
     validate_photo_settings(entry, manifest)
 
@@ -121,6 +159,10 @@ def import_entries(inbox: Path, keep_source: bool = False) -> int:
                 "id": entry["id"],
                 "name": entry["name"],
                 "officialModel": entry.get("officialModel", ""),
+                "species": entry.get("species", ""),
+                "spawnLocation": entry.get("spawnLocation", ""),
+                "collectionStatus": entry.get("collectionStatus", {"state": "active"}),
+                "relatives": entry.get("relatives", []),
                 "image": entry["imageFile"],
                 "dateAdded": entry["dateAdded"],
                 "funFacts": entry.get("funFacts", []),
