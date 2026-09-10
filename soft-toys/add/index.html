@@ -9,30 +9,57 @@
   <style>
     :root {
       --cream:#fbf7f1; --paper:#fffdf9; --ink:#4f4948; --muted:#817977;
-      --pink:#f2dfe2; --sage:#dfe8dd; --line:#e8ddd6;
+      --pink:#f2dfe2; --sage:#dfe8dd; --blue:#dfe8ef; --line:#e8ddd6;
       --serif: Georgia, "Times New Roman", serif;
       --round: ui-rounded, "SF Pro Rounded", "Avenir Next", system-ui, sans-serif;
     }
     * { box-sizing:border-box; }
     body { margin:0; background:var(--cream); color:var(--ink); font-family:var(--round); }
-    main { width:min(720px, calc(100% - 1.2rem)); margin:0 auto; padding:2.2rem 0 4rem; }
+    main { width:min(760px, calc(100% - 1.2rem)); margin:0 auto; padding:2.2rem 0 4rem; }
     header { margin-bottom:1.4rem; text-align:center; }
     h1 { margin:0; font-family:var(--serif); font-weight:500; font-size:clamp(2.3rem, 10vw, 4rem); letter-spacing:-.04em; }
-    header p { margin:.65rem auto 0; max-width:36rem; color:var(--muted); line-height:1.55; }
+    header p { margin:.65rem auto 0; max-width:38rem; color:var(--muted); line-height:1.55; }
     form { display:grid; gap:1rem; padding:1rem; border:1px solid var(--line); border-radius:1.6rem; background:rgba(255,255,255,.58); }
     .field { display:grid; gap:.42rem; }
     .field > span, fieldset legend { font-size:.82rem; font-weight:700; color:#746b68; }
     input, textarea, select, button { font:inherit; }
-    input, textarea, select { width:100%; border:1px solid #ded2cb; border-radius:.9rem; background:#fffdfb; color:var(--ink); padding:.8rem .85rem; outline:none; }
+    input[type="text"], input[type="date"], input[type="month"], input[type="number"], input[type="file"], textarea, select {
+      width:100%; border:1px solid #ded2cb; border-radius:.9rem; background:#fffdfb; color:var(--ink); padding:.8rem .85rem; outline:none;
+    }
     input:focus, textarea:focus, select:focus { border-color:#bd9ea2; box-shadow:0 0 0 3px rgba(189,158,162,.13); }
     textarea { min-height:7rem; resize:vertical; line-height:1.45; }
-    .photo-box { display:grid; place-items:center; min-height:14rem; overflow:hidden; border:1px dashed #d8c9c2; border-radius:1.1rem; background:#fffaf7; color:var(--muted); }
-    .photo-box img { width:100%; max-height:28rem; object-fit:contain; }
-    .photo-box.has-photo { border-style:solid; }
     fieldset { margin:0; padding:0; border:0; }
     .date-grid { display:grid; grid-template-columns:1fr 1.6fr; gap:.7rem; margin-top:.4rem; }
     .date-inputs [hidden] { display:none !important; }
     .helper { margin:.25rem 0 0; color:var(--muted); font-size:.78rem; line-height:1.45; }
+
+    .crop-section {
+      display:grid; gap:.85rem; padding:1rem; border:1px solid var(--line); border-radius:1.2rem; background:#fffaf7;
+    }
+    .crop-heading { display:flex; align-items:baseline; justify-content:space-between; gap:1rem; }
+    .crop-heading h2 { margin:0; font-family:var(--serif); font-size:1.2rem; font-weight:500; }
+    .crop-heading span { color:var(--muted); font-size:.75rem; }
+    .crop-preview {
+      position:relative; overflow:hidden; width:100%; border:1px solid #e0d4cd; background:#f4eee9; color:var(--muted);
+    }
+    .crop-preview.gallery { aspect-ratio:4 / 3.35; border-radius:1.15rem; }
+    .crop-preview.profile { aspect-ratio:16 / 10; border-radius:1.15rem; }
+    .crop-preview img {
+      width:100%; height:100%; object-fit:cover; object-position:50% 50%; transform:scale(1); transform-origin:center; display:block;
+    }
+    .crop-placeholder { position:absolute; inset:0; display:grid; place-items:center; padding:1rem; text-align:center; font-size:.85rem; }
+    .crop-controls { display:grid; gap:.7rem; }
+    .fit-row { display:grid; grid-template-columns:7.4rem 1fr; align-items:center; gap:.65rem; }
+    .fit-row label { color:#746b68; font-size:.78rem; font-weight:700; }
+    .fit-row select { padding:.6rem .7rem; }
+    .slider-row { display:grid; grid-template-columns:7.4rem 1fr 3.2rem; align-items:center; gap:.65rem; }
+    .slider-row label { color:#746b68; font-size:.78rem; font-weight:700; }
+    .slider-row output { color:var(--muted); font-size:.76rem; text-align:right; font-variant-numeric:tabular-nums; }
+    input[type="range"] { width:100%; accent-color:#b98f96; }
+    input[type="range"]:disabled { opacity:.38; cursor:not-allowed; }
+    .crop-buttons { display:flex; flex-wrap:wrap; gap:.55rem; }
+    .mini-button { border:1px solid #ded2cb; border-radius:.8rem; padding:.55rem .7rem; background:#fffdfb; color:#685f5d; font-size:.76rem; font-weight:700; }
+
     .actions { display:grid; grid-template-columns:1fr 1fr; gap:.7rem; margin-top:.3rem; }
     button { border:0; border-radius:1rem; padding:.9rem 1rem; font-weight:750; color:#514847; background:var(--pink); }
     button.secondary { background:var(--sage); }
@@ -41,14 +68,19 @@
     .steps { margin-top:1rem; padding:1rem 1.1rem; border:1px solid var(--line); border-radius:1.2rem; background:#fffaf6; color:var(--muted); font-size:.87rem; line-height:1.55; }
     .steps strong { color:var(--ink); }
     code { font-family:ui-monospace, SFMono-Regular, Menlo, monospace; font-size:.9em; }
-    @media (max-width:560px) { .actions, .date-grid { grid-template-columns:1fr; } }
+    @media (max-width:560px) {
+      .actions, .date-grid { grid-template-columns:1fr; }
+      .slider-row { grid-template-columns:6.2rem 1fr 3rem; gap:.45rem; }
+      .fit-row { grid-template-columns:6.2rem 1fr; gap:.45rem; }
+      .crop-heading { align-items:flex-start; flex-direction:column; gap:.2rem; }
+    }
   </style>
 </head>
 <body>
   <main>
     <header>
       <h1>Add a soft toy</h1>
-      <p>This helper does not change the live website by itself. It creates two tidy files you can save to your iCloud “Soft Toy Inbox” and import later on your Mac.</p>
+      <p>Choose a photo, then frame it separately for the collection gallery and the larger profile view. Your crop settings are saved with the toy.</p>
     </header>
 
     <form id="toyForm">
@@ -56,7 +88,81 @@
         <span>Photo</span>
         <input id="photo" type="file" accept="image/*" required>
       </label>
-      <div id="photoPreview" class="photo-box">photo preview</div>
+
+      <section class="crop-section" aria-labelledby="galleryCropTitle">
+        <div class="crop-heading">
+          <h2 id="galleryCropTitle">Gallery photo</h2>
+          <span>the card shown in your collection</span>
+        </div>
+        <div id="galleryPreview" class="crop-preview gallery">
+          <div class="crop-placeholder">Choose a photo above to preview the gallery crop.</div>
+        </div>
+        <div class="crop-controls">
+          <div class="fit-row">
+            <label for="galleryFit">Photo fit</label>
+            <select id="galleryFit">
+              <option value="cover">Fill frame (crop edges)</option>
+              <option value="contain">Show whole photo</option>
+            </select>
+          </div>
+          <div class="slider-row">
+            <label for="galleryX">Left / right</label>
+            <input id="galleryX" type="range" min="0" max="100" value="50">
+            <output id="galleryXValue" for="galleryX">50%</output>
+          </div>
+          <div class="slider-row">
+            <label for="galleryY">Up / down</label>
+            <input id="galleryY" type="range" min="0" max="100" value="50">
+            <output id="galleryYValue" for="galleryY">50%</output>
+          </div>
+          <div class="slider-row">
+            <label for="galleryZoom">Zoom</label>
+            <input id="galleryZoom" type="range" min="100" max="170" value="100">
+            <output id="galleryZoomValue" for="galleryZoom">100%</output>
+          </div>
+          <div class="crop-buttons">
+            <button class="mini-button" id="resetGallery" type="button">Reset gallery</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="crop-section" aria-labelledby="profileCropTitle">
+        <div class="crop-heading">
+          <h2 id="profileCropTitle">Profile photo</h2>
+          <span>the large image when you open a toy</span>
+        </div>
+        <div id="profilePreview" class="crop-preview profile">
+          <div class="crop-placeholder">Choose a photo above to preview the profile crop.</div>
+        </div>
+        <div class="crop-controls">
+          <div class="fit-row">
+            <label for="profileFit">Photo fit</label>
+            <select id="profileFit">
+              <option value="cover">Fill frame (crop edges)</option>
+              <option value="contain">Show whole photo</option>
+            </select>
+          </div>
+          <div class="slider-row">
+            <label for="profileX">Left / right</label>
+            <input id="profileX" type="range" min="0" max="100" value="50">
+            <output id="profileXValue" for="profileX">50%</output>
+          </div>
+          <div class="slider-row">
+            <label for="profileY">Up / down</label>
+            <input id="profileY" type="range" min="0" max="100" value="50">
+            <output id="profileYValue" for="profileY">50%</output>
+          </div>
+          <div class="slider-row">
+            <label for="profileZoom">Zoom</label>
+            <input id="profileZoom" type="range" min="100" max="170" value="100">
+            <output id="profileZoomValue" for="profileZoom">100%</output>
+          </div>
+          <div class="crop-buttons">
+            <button class="mini-button" id="copyGallery" type="button">Copy gallery framing</button>
+            <button class="mini-button" id="resetProfile" type="button">Reset profile</button>
+          </div>
+        </div>
+      </section>
 
       <label class="field">
         <span>Given name</span>
@@ -99,14 +205,14 @@
     </form>
 
     <div class="steps">
-      <strong>On iPhone:</strong> use <em>Save / share both files</em> first. On supported Safari versions it opens the iOS share sheet, where you can choose <em>Save to Files</em> and put both files straight into <code>Soft Toy Inbox</code> in iCloud Drive. If your browser will not share both files together, use the two fallback buttons. The filenames are matched automatically later, so you do not have to rename anything.
+      <strong>Photo framing:</strong> the two previews use the same proportions as the real website. <em>Photo fit</em> can either fill the frame or show the whole image. <em>Left / right</em> and <em>Up / down</em> choose the focus point, and <em>Zoom</em> lets you crop in a little more. These choices are saved separately for the gallery and profile.<br><br>
+      <strong>On iPhone:</strong> use <em>Save / share both files</em> first. On supported Safari versions it opens the iOS share sheet, where you can choose <em>Save to Files</em> and put both files straight into <code>Soft Toy Inbox</code> in iCloud Drive. If your browser will not share both files together, use the two fallback buttons.
     </div>
   </main>
 
   <script>
     const form = document.querySelector('#toyForm');
     const photoInput = document.querySelector('#photo');
-    const preview = document.querySelector('#photoPreview');
     const precision = document.querySelector('#datePrecision');
     const dayInput = document.querySelector('#dateDay');
     const monthInput = document.querySelector('#dateMonth');
@@ -116,7 +222,31 @@
     const saveEntryButton = document.querySelector('#saveEntry');
     const status = document.querySelector('#status');
 
+    const cropViews = {
+      gallery: {
+        preview: document.querySelector('#galleryPreview'),
+        fit: document.querySelector('#galleryFit'),
+        x: document.querySelector('#galleryX'),
+        y: document.querySelector('#galleryY'),
+        zoom: document.querySelector('#galleryZoom'),
+        xValue: document.querySelector('#galleryXValue'),
+        yValue: document.querySelector('#galleryYValue'),
+        zoomValue: document.querySelector('#galleryZoomValue')
+      },
+      profile: {
+        preview: document.querySelector('#profilePreview'),
+        fit: document.querySelector('#profileFit'),
+        x: document.querySelector('#profileX'),
+        y: document.querySelector('#profileY'),
+        zoom: document.querySelector('#profileZoom'),
+        xValue: document.querySelector('#profileXValue'),
+        yValue: document.querySelector('#profileYValue'),
+        zoomValue: document.querySelector('#profileZoomValue')
+      }
+    };
+
     let prepared = null;
+    let photoObjectUrl = null;
 
     const now = new Date();
     const yyyy = now.getFullYear();
@@ -139,19 +269,106 @@
     }
     precision.addEventListener('change', setPrecision);
 
+    function settingsFor(viewName) {
+      const view = cropViews[viewName];
+      return {
+        fit: view.fit.value,
+        x: Number(view.x.value),
+        y: Number(view.y.value),
+        zoom: Number(view.zoom.value) / 100
+      };
+    }
+
+    function updateCropPreview(viewName) {
+      const view = cropViews[viewName];
+
+      // "Show whole photo" must never crop. If a previous Fill frame setting
+      // used zoom, return it to 100% and disable the zoom control in contain mode.
+      if (view.fit.value === 'contain') {
+        view.zoom.value = 100;
+        view.zoom.disabled = true;
+      } else {
+        view.zoom.disabled = false;
+      }
+
+      const settings = settingsFor(viewName);
+      const img = view.preview.querySelector('img');
+
+      view.xValue.value = `${settings.x}%`;
+      view.yValue.value = `${settings.y}%`;
+      view.zoomValue.value = `${Math.round(settings.zoom * 100)}%`;
+
+      if (img) {
+        img.style.objectFit = settings.fit;
+        img.style.objectPosition = `${settings.x}% ${settings.y}%`;
+        img.style.transformOrigin = `${settings.x}% ${settings.y}%`;
+        img.style.transform = `scale(${settings.fit === 'contain' ? 1 : settings.zoom})`;
+      }
+    }
+
+    function resetCrop(viewName) {
+      const view = cropViews[viewName];
+      view.fit.value = 'cover';
+      view.x.value = 50;
+      view.y.value = 50;
+      view.zoom.value = 100;
+      updateCropPreview(viewName);
+      prepared = null;
+    }
+
+    function copyCrop(fromName, toName) {
+      const from = cropViews[fromName];
+      const to = cropViews[toName];
+      to.fit.value = from.fit.value;
+      to.x.value = from.x.value;
+      to.y.value = from.y.value;
+      to.zoom.value = from.zoom.value;
+      updateCropPreview(toName);
+      prepared = null;
+    }
+
+    Object.entries(cropViews).forEach(([viewName, view]) => {
+      [view.fit, view.x, view.y, view.zoom].forEach((input) => {
+        input.addEventListener('input', () => {
+          updateCropPreview(viewName);
+          prepared = null;
+          status.textContent = '';
+        });
+      });
+      updateCropPreview(viewName);
+    });
+
+    document.querySelector('#resetGallery').addEventListener('click', () => resetCrop('gallery'));
+    document.querySelector('#resetProfile').addEventListener('click', () => resetCrop('profile'));
+    document.querySelector('#copyGallery').addEventListener('click', () => copyCrop('gallery', 'profile'));
+
     photoInput.addEventListener('change', () => {
       const file = photoInput.files?.[0];
       prepared = null;
+
+      if (photoObjectUrl) {
+        URL.revokeObjectURL(photoObjectUrl);
+        photoObjectUrl = null;
+      }
+
+      Object.values(cropViews).forEach((view) => {
+        view.preview.replaceChildren();
+      });
+
       if (!file) {
-        preview.textContent = 'photo preview';
-        preview.classList.remove('has-photo');
+        cropViews.gallery.preview.innerHTML = '<div class="crop-placeholder">Choose a photo above to preview the gallery crop.</div>';
+        cropViews.profile.preview.innerHTML = '<div class="crop-placeholder">Choose a photo above to preview the profile crop.</div>';
         return;
       }
-      const img = document.createElement('img');
-      img.alt = 'Selected soft toy photo';
-      img.src = URL.createObjectURL(file);
-      preview.replaceChildren(img);
-      preview.classList.add('has-photo');
+
+      photoObjectUrl = URL.createObjectURL(file);
+      Object.entries(cropViews).forEach(([viewName, view]) => {
+        const img = document.createElement('img');
+        img.alt = `${viewName === 'gallery' ? 'Gallery' : 'Profile'} crop preview`;
+        img.src = photoObjectUrl;
+        view.preview.appendChild(img);
+        updateCropPreview(viewName);
+      });
     });
 
     form.addEventListener('input', () => { prepared = null; status.textContent = ''; });
@@ -178,9 +395,11 @@
       const width = Math.round(bitmap.width * scale);
       const height = Math.round(bitmap.height * scale);
       const canvas = document.createElement('canvas');
-      canvas.width = width; canvas.height = height;
+      canvas.width = width;
+      canvas.height = height;
       canvas.getContext('2d').drawImage(bitmap, 0, 0, width, height);
       const imageBlob = await new Promise((resolve) => canvas.toBlob(resolve, 'image/jpeg', .86));
+      if (!imageBlob) throw new Error('The photo could not be prepared. Please try another image.');
 
       const entry = {
         id,
@@ -188,7 +407,11 @@
         officialModel: document.querySelector('#officialModel').value.trim(),
         imageFile,
         dateAdded: currentDateAdded(),
-        funFacts: document.querySelector('#funFacts').value.split('\n').map(s => s.trim()).filter(Boolean)
+        funFacts: document.querySelector('#funFacts').value.split('\n').map(s => s.trim()).filter(Boolean),
+        photoDisplay: {
+          gallery: settingsFor('gallery'),
+          profile: settingsFor('profile')
+        }
       };
 
       const entryBlob = new Blob([JSON.stringify(entry, null, 2) + '\n'], { type: 'application/json' });
@@ -206,7 +429,6 @@
       a.remove();
       setTimeout(() => URL.revokeObjectURL(url), 2000);
     }
-
 
     shareBothButton.addEventListener('click', async () => {
       try {

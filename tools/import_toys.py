@@ -39,6 +39,34 @@ def save_collection(toys: list[dict]) -> None:
         f.write("\n")
 
 
+def validate_photo_settings(entry: dict, manifest: Path) -> None:
+    photo_display = entry.get("photoDisplay")
+    if photo_display is None:
+        return
+    if not isinstance(photo_display, dict):
+        raise ValueError(f"{manifest.name}: photoDisplay must be an object")
+
+    for view_name in ("gallery", "profile"):
+        settings = photo_display.get(view_name)
+        if settings is None:
+            continue
+        if not isinstance(settings, dict):
+            raise ValueError(f"{manifest.name}: photoDisplay.{view_name} must be an object")
+
+        fit = settings.get("fit")
+        if fit is not None and fit not in {"cover", "contain"}:
+            raise ValueError(f"{manifest.name}: photoDisplay.{view_name}.fit must be cover or contain")
+
+        for key, minimum, maximum in (("x", 0, 100), ("y", 0, 100), ("zoom", 1, 1.7)):
+            if key not in settings:
+                continue
+            value = settings[key]
+            if not isinstance(value, (int, float)) or isinstance(value, bool) or not minimum <= value <= maximum:
+                raise ValueError(
+                    f"{manifest.name}: photoDisplay.{view_name}.{key} must be between {minimum} and {maximum}"
+                )
+
+
 def validate_entry(entry: dict, manifest: Path) -> None:
     required = ["id", "name", "imageFile", "dateAdded"]
     missing = [key for key in required if not entry.get(key)]
@@ -48,6 +76,8 @@ def validate_entry(entry: dict, manifest: Path) -> None:
     date_added = entry.get("dateAdded")
     if not isinstance(date_added, dict) or date_added.get("precision") not in {"day", "month", "year"} or not date_added.get("value"):
         raise ValueError(f"{manifest.name}: dateAdded is invalid")
+
+    validate_photo_settings(entry, manifest)
 
 
 def import_entries(inbox: Path, keep_source: bool = False) -> int:
@@ -94,6 +124,7 @@ def import_entries(inbox: Path, keep_source: bool = False) -> int:
                 "image": entry["imageFile"],
                 "dateAdded": entry["dateAdded"],
                 "funFacts": entry.get("funFacts", []),
+                "photoDisplay": entry.get("photoDisplay", {}),
             }
             toys.append(website_entry)
             existing_ids.add(entry["id"])

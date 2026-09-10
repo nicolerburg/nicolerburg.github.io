@@ -1,1 +1,30 @@
-[]
+[
+  {
+    "id": "agent-buster-1789035546419",
+    "name": "Agent Buster",
+    "officialModel": "Buizel Pokemon USA Unknown Model",
+    "image": "agent-buster-1789035546419.jpg",
+    "dateAdded": {
+      "precision": "year",
+      "value": "2008"
+    },
+    "funFacts": [
+      "Agent Buster is the oldest soft toy in the collection!",
+      "He watches over all of the the others and keeps them safe."
+    ],
+    "photoDisplay": {
+      "gallery": {
+        "fit": "cover",
+        "x": 50,
+        "y": 46,
+        "zoom": 1
+      },
+      "profile": {
+        "fit": "contain",
+        "x": 50,
+        "y": 50,
+        "zoom": 1
+      }
+    }
+  }
+]

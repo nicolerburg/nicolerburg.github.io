@@ -46,11 +46,45 @@ function sortableDate(dateAdded) {
   return value;
 }
 
-function imageMarkup(toy, className = "") {
+function clampNumber(value, min, max, fallback) {
+  const number = Number(value);
+  return Number.isFinite(number) ? Math.min(max, Math.max(min, number)) : fallback;
+}
+
+function legacyPosition(toy, viewName) {
+  const value = viewName === "profile" ? toy.profilePosition : toy.galleryPosition;
+  if (typeof value !== "string") return null;
+  const match = value.trim().match(/^(\d+(?:\.\d+)?)%\s+(\d+(?:\.\d+)?)%$/);
+  if (!match) return null;
+  return { x: Number(match[1]), y: Number(match[2]) };
+}
+
+function photoSettings(toy, viewName) {
+  const saved = toy.photoDisplay?.[viewName] || {};
+  const legacy = legacyPosition(toy, viewName) || {};
+  const legacyZoom = viewName === "profile" ? toy.profileZoom : toy.galleryZoom;
+
+  const fit = saved.fit === "contain" ? "contain" : "cover";
+
+  return {
+    fit,
+    x: clampNumber(saved.x ?? legacy.x, 0, 100, 50),
+    y: clampNumber(saved.y ?? legacy.y, 0, 100, 50),
+    // "contain" means exactly that: always keep the complete photo visible.
+    // A transform scale above 1 would crop it again, so zoom is ignored in this mode.
+    zoom: fit === "contain" ? 1 : clampNumber(saved.zoom ?? legacyZoom, 1, 1.7, 1)
+  };
+}
+
+function imageMarkup(toy, className = "", viewName = "gallery") {
   if (!toy.image) {
     return `<div class="photo-placeholder ${className}" aria-label="No photo available">♡</div>`;
   }
-  return `<img class="${className}" src="./images/${encodeURIComponent(toy.image)}" alt="${escapeHtml(toy.name)}">`;
+
+  const settings = photoSettings(toy, viewName);
+  const style = `object-fit:${settings.fit};object-position:${settings.x}% ${settings.y}%;transform-origin:${settings.x}% ${settings.y}%;transform:scale(${settings.zoom});`;
+
+  return `<img class="${className}" src="./images/${encodeURIComponent(toy.image)}" alt="${escapeHtml(toy.name)}" style="${style}">`;
 }
 
 function cardMarkup(toy) {
@@ -60,7 +94,7 @@ function cardMarkup(toy) {
   return `
     <article class="toy-card">
       <button class="card-button" type="button" data-toy-id="${escapeHtml(toy.id)}" aria-label="Open details for ${escapeHtml(toy.name)}">
-        <div class="photo-wrap">${imageMarkup(toy)}</div>
+        <div class="photo-wrap">${imageMarkup(toy, "", "gallery")}</div>
         <div class="card-body">
           <div class="card-date">Joined ${escapeHtml(displayDate(toy.dateAdded))}</div>
           <h2 class="toy-name">${escapeHtml(toy.name)}</h2>
@@ -107,8 +141,12 @@ function showToy(id) {
     ? `<h3 class="facts-title">Little facts</h3><ul class="facts-list">${toy.funFacts.map((fact) => `<li>${escapeHtml(fact)}</li>`).join("")}</ul>`
     : `<h3 class="facts-title">Little facts</h3><p class="dialog-official">No extra notes yet.</p>`;
 
+  const profilePhoto = toy.image
+    ? `<div class="dialog-photo-wrap">${imageMarkup(toy, "dialog-photo", "profile")}</div>`
+    : `<div class="photo-placeholder dialog-photo-wrap" aria-hidden="true">♡</div>`;
+
   dialogContent.innerHTML = `
-    ${toy.image ? imageMarkup(toy, "dialog-photo") : `<div class="photo-placeholder dialog-photo" aria-hidden="true">♡</div>`}
+    ${profilePhoto}
     <div class="dialog-copy">
       <div class="dialog-kicker">Joined ${escapeHtml(displayDate(toy.dateAdded))}</div>
       <h2>${escapeHtml(toy.name)}</h2>
