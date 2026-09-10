@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Website in progress</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --paper: #fbf7f1;
+      --ink: #554f4c;
+      --muted: #8d8580;
+      --line: #e7ddd4;
+    }
+    * { box-sizing: border-box; }
+    html, body { min-height: 100%; }
+    body {
+      margin: 0;
+      display: grid;
+      place-items: center;
+      min-height: 100svh;
+      padding: 2rem;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: ui-rounded, "SF Pro Rounded", "Avenir Next", system-ui, sans-serif;
+    }
+    main {
+      width: min(34rem, 100%);
+      text-align: center;
+      padding: 2.5rem 2rem;
+      border: 1px solid var(--line);
+      border-radius: 1.75rem;
+      background: rgba(255,255,255,.45);
+    }
+    .mark {
+      display: inline-grid;
+      place-items: center;
+      width: 3.25rem;
+      aspect-ratio: 1;
+      margin-bottom: 1rem;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: #fff;
+      font-size: 1.35rem;
+    }
+    h1 {
+      margin: 0;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(2rem, 7vw, 3.25rem);
+      font-weight: 500;
+      letter-spacing: -.03em;
+    }
+    p {
+      margin: .8rem 0 0;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <div class="mark" aria-hidden="true">✿</div>
+    <h1>Something is being made here.</h1>
+    <p>This website is still in progress. Please check back another time.</p>
+  </main>
+</body>
+</html>
