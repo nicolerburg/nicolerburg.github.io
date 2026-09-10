@@ -66,5 +66,80 @@
         "zoom": 1
       }
     }
+  },
+  {
+    "id": "larry-1789042533858",
+    "name": "Larry",
+    "officialModel": "Unknown",
+    "species": "Turtle",
+    "spawnLocation": "Tampa Aquarium",
+    "collectionStatus": {
+      "state": "active"
+    },
+    "image": "larry-1789042533858.jpg",
+    "dateAdded": {
+      "precision": "month",
+      "value": "2017-12"
+    },
+    "relatives": [
+        {
+          "relationship": "Daughter",
+          "toyId": "olive-1789042367318"
+        }
+      ],
+    "funFacts": [
+      "Larry is a home body, but he loves watching Olive travel the world!"
+    ],
+    "photoDisplay": {
+      "gallery": {
+        "fit": "cover",
+        "x": 56,
+        "y": 54,
+        "zoom": 1.13
+      },
+      "profile": {
+        "fit": "cover",
+        "x": 28,
+        "y": 50,
+        "zoom": 1.17
+      }
+    }
+  },
+  {
+    "id": "olive-1789042367318",
+    "name": "Olive",
+    "officialModel": "Unknown",
+    "species": "Turtle",
+    "spawnLocation": "Tampa Aquarium",
+    "collectionStatus": {
+      "state": "active"
+    },
+    "relatives": [{
+        "relationship": "Father",
+        "toyId": "larry-1789042533858"
+      }],
+    "image": "olive-1789042367318.jpg",
+    "dateAdded": {
+      "precision": "month",
+      "value": "2017-12"
+    },
+    "funFacts": [
+      "Olive loves to travel! Her favorite place is Martin’s backpack.",
+      "She always wears a black scrunchie."
+    ],
+    "photoDisplay": {
+      "gallery": {
+        "fit": "cover",
+        "x": 50,
+        "y": 50,
+        "zoom": 1
+      },
+      "profile": {
+        "fit": "cover",
+        "x": 50,
+        "y": 50,
+        "zoom": 1
+      }
+    }
   }
 ]
