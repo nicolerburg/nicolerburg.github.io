@@ -82,11 +82,11 @@
       "value": "2017-12"
     },
     "relatives": [
-        {
-          "relationship": "Daughter",
-          "toyId": "olive-1789042367318"
-        }
-      ],
+      {
+        "relationship": "Daughter",
+        "toyId": "olive-1789042367318"
+      }
+    ],
     "funFacts": [
       "Larry is a home body, but he loves watching Olive travel the world!"
     ],
@@ -114,10 +114,12 @@
     "collectionStatus": {
       "state": "active"
     },
-    "relatives": [{
+    "relatives": [
+      {
         "relationship": "Father",
         "toyId": "larry-1789042533858"
-      }],
+      }
+    ],
     "image": "olive-1789042367318.jpg",
     "dateAdded": {
       "precision": "month",
@@ -139,6 +141,73 @@
         "x": 50,
         "y": 50,
         "zoom": 1
+      }
+    }
+  },
+  {
+    "id": "jerboa-1789048744902",
+    "name": "Jerboa",
+    "officialModel": "Jellycat Jerboa",
+    "species": "Jerboa",
+    "spawnLocation": "Delft",
+    "collectionStatus": {
+      "state": "active"
+    },
+    "relatives": [],
+    "image": "jerboa-1789048744902.jpg",
+    "dateAdded": {
+      "precision": "day",
+      "value": "2026-03-10"
+    },
+    "funFacts": [
+      "Jerboa came to us all the way from the UK!"
+    ],
+    "photoDisplay": {
+      "gallery": {
+        "fit": "cover",
+        "x": 24,
+        "y": 22,
+        "zoom": 1.1
+      },
+      "profile": {
+        "fit": "cover",
+        "x": 50,
+        "y": 1,
+        "zoom": 1
+      }
+    }
+  },
+  {
+    "id": "moomin-1789049054988",
+    "name": "Moomin",
+    "officialModel": "Palm Pals Moomin",
+    "species": "Moomin",
+    "spawnLocation": "Espoo",
+    "collectionStatus": {
+      "state": "active"
+    },
+    "relatives": [],
+    "image": "moomin-1789049054988.jpg",
+    "dateAdded": {
+      "precision": "day",
+      "value": "2026-06-28"
+    },
+    "funFacts": [
+      "This Moomin was an anniversary gift that accidentally got shipped to Finland and so we didn’t get to meet him for almost 3 months!",
+      "Super soft and tossable!"
+    ],
+    "photoDisplay": {
+      "gallery": {
+        "fit": "cover",
+        "x": 38,
+        "y": 79,
+        "zoom": 1.19
+      },
+      "profile": {
+        "fit": "cover",
+        "x": 61,
+        "y": 57,
+        "zoom": 1.12
       }
     }
   }
