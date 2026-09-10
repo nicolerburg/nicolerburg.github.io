@@ -76,6 +76,22 @@ function statusLabel(state) {
   return "Active";
 }
 
+function statusDate(toy) {
+  const state = statusState(toy);
+  const status = toy.collectionStatus || {};
+  if (state === "lost") return status.lostDate || null;
+  if (state === "memory") return status.endDate || null;
+  return null;
+}
+
+function cardDateText(toy) {
+  const joined = displayDate(toy.dateAdded);
+  const finalDate = statusDate(toy);
+  return finalDate?.value
+    ? `${joined} – ${displayDate(finalDate)}`
+    : `Joined ${joined}`;
+}
+
 function clampNumber(value, min, max, fallback) {
   const number = Number(value);
   return Number.isFinite(number) ? Math.min(max, Math.max(min, number)) : fallback;
@@ -131,12 +147,11 @@ function cardMarkup(toy) {
       <button class="card-button" type="button" data-toy-id="${escapeHtml(toy.id)}" aria-label="Open details for ${escapeHtml(toy.name)}">
         <div class="photo-wrap">${imageMarkup(toy, "", "gallery")}</div>
         <div class="card-body">
-          ${cardStatusMarkup(toy)}
-          <div class="card-date">Joined ${escapeHtml(displayDate(toy.dateAdded))}</div>
+          <div class="card-date">${escapeHtml(cardDateText(toy))}</div>
           <h2 class="toy-name">${escapeHtml(toy.name)}</h2>
+          ${cardStatusMarkup(toy)}
           ${official}
           ${firstFact}
-          <span class="more-link">open scrapbook note →</span>
         </div>
       </button>
     </article>`;
@@ -156,6 +171,7 @@ function searchMatches(toy, query) {
     toy.spawnLocation,
     status.lastKnownLocation,
     statusLabel(statusState(toy)),
+    status.lostDate?.value,
     status.endDate?.value,
     yearAdded(toy),
     ...(toy.funFacts || []),
@@ -332,9 +348,6 @@ function infoMarkup(toy) {
   if (state === "lost" && status.lastKnownLocation) {
     items.push(`<div class="profile-info-item"><dt>Last Known Location</dt><dd>${escapeHtml(status.lastKnownLocation)}</dd></div>`);
   }
-  if (state === "memory" && status.endDate?.value) {
-    items.push(`<div class="profile-info-item"><dt>End Date</dt><dd>${escapeHtml(displayDate(status.endDate))}</dd></div>`);
-  }
   return items.length ? `<dl class="profile-info">${items.join("")}</dl>` : "";
 }
 
@@ -379,9 +392,9 @@ function showToy(id) {
   dialogContent.innerHTML = `
     ${profilePhoto}
     <div class="dialog-copy">
-      ${profileStatusMarkup(toy)}
-      <div class="dialog-kicker">Joined ${escapeHtml(displayDate(toy.dateAdded))}</div>
+      <div class="dialog-kicker">${escapeHtml(cardDateText(toy))}</div>
       <h2>${escapeHtml(toy.name)}</h2>
+      ${profileStatusMarkup(toy)}
       ${toy.officialModel ? `<p class="dialog-official">${escapeHtml(toy.officialModel)}</p>` : ""}
       ${infoMarkup(toy)}
       ${relativesMarkup(toy)}

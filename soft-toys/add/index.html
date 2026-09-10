@@ -213,7 +213,7 @@
       <section class="optional-card" aria-labelledby="collectionStatusTitle">
         <div>
           <h2 id="collectionStatusTitle">Collection status</h2>
-          <p class="helper">Active is the normal collection state. Lost and In Our Memory are shown in their own gallery tabs.</p>
+          <p class="helper">Active is the normal collection state. Lost and In Our Memory can be shown or hidden with the gallery filters.</p>
         </div>
 
         <label class="field">
@@ -230,6 +230,23 @@
             <span>Last known location <span style="font-weight:400; color:var(--muted)">(optional)</span></span>
             <input id="lastKnownLocation" type="text" placeholder="e.g. Hotel room in Stockholm, back seat of the car" maxlength="180">
           </label>
+
+          <fieldset>
+            <legend>Lost date <span style="font-weight:400; color:var(--muted)">(optional)</span></legend>
+            <div class="date-grid">
+              <select id="lostDatePrecision" aria-label="Lost date precision">
+                <option value="day">Exact date</option>
+                <option value="month">Month only</option>
+                <option value="year">Year only</option>
+              </select>
+              <div class="date-inputs">
+                <input id="lostDateDay" type="date" aria-label="Exact lost date">
+                <input id="lostDateMonth" type="month" aria-label="Lost month" hidden>
+                <input id="lostDateYear" type="number" inputmode="numeric" min="1900" max="2100" placeholder="Year" aria-label="Lost year" hidden>
+              </div>
+            </div>
+            <p class="helper">Leave this blank if you do not know when the toy was lost.</p>
+          </fieldset>
         </div>
 
         <div id="memoryStatusFields" class="status-extra" hidden>
@@ -251,7 +268,7 @@
           </fieldset>
         </div>
 
-        <p id="statusExplanation" class="status-note">Active toys appear in the main collection gallery.</p>
+        <p id="statusExplanation" class="status-note">Active toys appear normally in the collection gallery.</p>
       </section>
 
       <section class="optional-card" aria-labelledby="relativesTitle">
@@ -296,7 +313,7 @@
 
     <div class="steps">
       <strong>Photo framing:</strong> the two previews use the same proportions as the real website. <em>Photo fit</em> can either fill the frame or show the whole image. <em>Left / right</em> and <em>Up / down</em> choose the focus point, and <em>Zoom</em> lets you crop in a little more. These choices are saved separately for the gallery and profile.<br><br>
-      <strong>Collection status:</strong> Active toys stay in the normal gallery. Lost toys move to the Lost tab and can include a last known location. Toys marked In Our Memory move to the memorial tab and can include an end date.<br><br>
+      <strong>Collection status:</strong> Active, Lost, and In Our Memory toys can all appear together and can be filtered in the gallery. Lost toys can include a last known location and lost date. Toys marked In Our Memory can include an end date.<br><br>
       <strong>On iPhone:</strong> use <em>Save / share both files</em> first. On supported Safari versions it opens the iOS share sheet, where you can choose <em>Save to Files</em> and put both files straight into <code>Soft Toy Inbox</code> in iCloud Drive. If your browser will not share both files together, use the two fallback buttons.
     </div>
   </main>
@@ -319,6 +336,10 @@
     const lostStatusFields = document.querySelector('#lostStatusFields');
     const memoryStatusFields = document.querySelector('#memoryStatusFields');
     const lastKnownLocationInput = document.querySelector('#lastKnownLocation');
+    const lostDatePrecision = document.querySelector('#lostDatePrecision');
+    const lostDateDay = document.querySelector('#lostDateDay');
+    const lostDateMonth = document.querySelector('#lostDateMonth');
+    const lostDateYear = document.querySelector('#lostDateYear');
     const endDatePrecision = document.querySelector('#endDatePrecision');
     const endDateDay = document.querySelector('#endDateDay');
     const endDateMonth = document.querySelector('#endDateMonth');
@@ -373,6 +394,13 @@
     }
     precision.addEventListener('change', setPrecision);
 
+    function setLostDatePrecision() {
+      lostDateDay.hidden = lostDatePrecision.value !== 'day';
+      lostDateMonth.hidden = lostDatePrecision.value !== 'month';
+      lostDateYear.hidden = lostDatePrecision.value !== 'year';
+      prepared = null;
+    }
+
     function setEndDatePrecision() {
       endDateDay.hidden = endDatePrecision.value !== 'day';
       endDateMonth.hidden = endDatePrecision.value !== 'month';
@@ -386,17 +414,19 @@
       memoryStatusFields.hidden = state !== 'memory';
 
       if (state === 'lost') {
-        statusExplanation.textContent = 'Lost toys appear in the Lost gallery tab. Add the last place they were known to be if you want.';
+        statusExplanation.textContent = 'Lost toys can be filtered in the gallery. Add the last known location and/or lost date if you want.';
       } else if (state === 'memory') {
-        statusExplanation.textContent = 'Toys marked In Our Memory appear in the memorial gallery tab. The end date can be as exact or approximate as you know.';
+        statusExplanation.textContent = 'Toys marked In Our Memory can be filtered in the gallery. The end date can be as exact or approximate as you know.';
       } else {
-        statusExplanation.textContent = 'Active toys appear in the main collection gallery.';
+        statusExplanation.textContent = 'Active toys appear normally in the collection gallery.';
       }
       prepared = null;
     }
 
+    lostDatePrecision.addEventListener('change', setLostDatePrecision);
     endDatePrecision.addEventListener('change', setEndDatePrecision);
     collectionStatusInput.addEventListener('change', setCollectionStatus);
+    setLostDatePrecision();
     setEndDatePrecision();
     setCollectionStatus();
 
@@ -586,6 +616,17 @@
       return { precision: 'day', value: dayInput.value };
     }
 
+    function currentLostDate() {
+      if (lostDatePrecision.value === 'year') {
+        const value = String(lostDateYear.value || '').trim();
+        return value ? { precision: 'year', value: value.padStart(4, '0') } : null;
+      }
+      if (lostDatePrecision.value === 'month') {
+        return lostDateMonth.value ? { precision: 'month', value: lostDateMonth.value } : null;
+      }
+      return lostDateDay.value ? { precision: 'day', value: lostDateDay.value } : null;
+    }
+
     function currentEndDate() {
       if (endDatePrecision.value === 'year') {
         const value = String(endDateYear.value || '').trim();
@@ -602,7 +643,9 @@
       const result = { state };
       if (state === 'lost') {
         const lastKnownLocation = lastKnownLocationInput.value.trim();
+        const lostDate = currentLostDate();
         if (lastKnownLocation) result.lastKnownLocation = lastKnownLocation;
+        if (lostDate) result.lostDate = lostDate;
       }
       if (state === 'memory') {
         const endDate = currentEndDate();

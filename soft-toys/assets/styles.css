@@ -379,7 +379,7 @@ h1 {
 .card-status {
   display: inline-flex;
   align-items: center;
-  margin: 0 0 .55rem;
+  margin: .55rem 0 0;
   padding: .34rem .58rem;
   border: 1px solid #ded4ce;
   border-radius: 999px;
@@ -419,14 +419,6 @@ h1 {
   font-size: .9rem;
   line-height: 1.5;
 }
-.more-link {
-  display: inline-block;
-  margin-top: .8rem;
-  color: #8c6e70;
-  font-size: .83rem;
-  font-weight: 700;
-}
-
 .empty-state {
   width: min(520px, 100%);
   margin: 3.5rem auto;
@@ -498,7 +490,7 @@ footer {
   display: inline-flex;
   align-items: center;
   gap: .42rem;
-  margin: 0 0 .8rem;
+  margin: .7rem 0 0;
   padding: .48rem .7rem;
   border: 1px solid #ded4ce;
   border-radius: 999px;
