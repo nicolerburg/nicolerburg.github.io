@@ -3,6 +3,7 @@
     "id": "agent-buster-1789035546419",
     "name": "Agent Buster",
     "officialModel": "Buizel Pokemon USA Unknown Model",
+    "species": "Pokemon",
     "image": "agent-buster-1789035546419.jpg",
     "dateAdded": {
       "precision": "year",
@@ -21,6 +22,45 @@
       },
       "profile": {
         "fit": "contain",
+        "x": 50,
+        "y": 50,
+        "zoom": 1
+      }
+    }
+  },
+  {
+    "id": "raldolfo-1789040590246",
+    "name": "Raldolfo",
+    "officialModel": "Stretchy Corgi",
+    "species": "Dog",
+    "spawnLocation": "Gamestate Arcade Den Haag",
+    "collectionStatus": {
+      "state": "memory",
+      "endDate": {
+        "precision": "day",
+        "value": "2025-12-18"
+      }
+    },
+    "relatives": [],
+    "image": "raldolfo-1789040590246.jpg",
+    "dateAdded": {
+      "precision": "day",
+      "value": "2024-04-07"
+    },
+    "funFacts": [
+      "Raldolfo was rescued from behind a prize counter.",
+      "He lived a wonderful and happy life on Martin's desk and beside the bed.",
+      "He will be honored in the future name of our dog."
+    ],
+    "photoDisplay": {
+      "gallery": {
+        "fit": "cover",
+        "x": 50,
+        "y": 50,
+        "zoom": 1
+      },
+      "profile": {
+        "fit": "cover",
         "x": 50,
         "y": 50,
         "zoom": 1
