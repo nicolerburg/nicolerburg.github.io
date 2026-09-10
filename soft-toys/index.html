@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f7eee9">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Soft Toy Collection</title>
+  <link rel="stylesheet" href="./assets/styles.css">
+</head>
+<body>
+  <div class="page-shell">
+    <header class="site-header">
+      <div class="eyebrow">a small soft archive</div>
+      <h1>Soft Toy Collection</h1>
+      <p class="intro">A cozy little catalogue of friends, where they came from, and the stories attached to them.</p>
+      <div class="header-doodle" aria-hidden="true">♡</div>
+    </header>
+
+    <section class="collection-toolbar" aria-label="Collection tools">
+      <label class="search-field">
+        <span class="sr-only">Search collection</span>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m21 21-4.2-4.2m1.2-5.3a6.5 6.5 0 1 1-13 0 6.5 6.5 0 0 1 13 0Z"/></svg>
+        <input id="searchInput" type="search" placeholder="Search by name, brand, or fact…" autocomplete="off">
+      </label>
+      <label class="sort-field">
+        <span>Sort</span>
+        <select id="sortSelect">
+          <option value="added-desc">Newest to collection</option>
+          <option value="added-asc">Oldest to collection</option>
+          <option value="name-asc">Name A–Z</option>
+        </select>
+      </label>
+    </section>
+
+    <div class="collection-summary" aria-live="polite">
+      <span id="collectionCount">0 soft toys</span>
+      <span class="tiny-flower" aria-hidden="true">✿</span>
+    </div>
+
+    <main>
+      <div id="collectionGrid" class="collection-grid"></div>
+      <section id="emptyState" class="empty-state" hidden>
+        <div class="empty-face" aria-hidden="true">ʕ•ᴥ•ʔ</div>
+        <h2>No soft toys here yet</h2>
+        <p>Your collection will appear here after you add the first entry.</p>
+      </section>
+      <section id="noResults" class="empty-state" hidden>
+        <div class="empty-face" aria-hidden="true">૮ ˶ᵔ ᵕ ᵔ˶ ა</div>
+        <h2>No matching friends</h2>
+        <p>Try a different search.</p>
+      </section>
+    </main>
+
+    <footer>
+      <span>made with care</span>
+      <span aria-hidden="true">·</span>
+      <span id="footerCount"></span>
+    </footer>
+  </div>
+
+  <dialog id="toyDialog" class="toy-dialog">
+    <button class="dialog-close" type="button" aria-label="Close details">×</button>
+    <div id="dialogContent"></div>
+  </dialog>
+
+  <script src="./assets/collection.js" defer></script>
+</body>
+</html>

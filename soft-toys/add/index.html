@@ -1,0 +1,250 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#f8efed">
+  <title>Add a soft toy</title>
+  <style>
+    :root {
+      --cream:#fbf7f1; --paper:#fffdf9; --ink:#4f4948; --muted:#817977;
+      --pink:#f2dfe2; --sage:#dfe8dd; --line:#e8ddd6;
+      --serif: Georgia, "Times New Roman", serif;
+      --round: ui-rounded, "SF Pro Rounded", "Avenir Next", system-ui, sans-serif;
+    }
+    * { box-sizing:border-box; }
+    body { margin:0; background:var(--cream); color:var(--ink); font-family:var(--round); }
+    main { width:min(720px, calc(100% - 1.2rem)); margin:0 auto; padding:2.2rem 0 4rem; }
+    header { margin-bottom:1.4rem; text-align:center; }
+    h1 { margin:0; font-family:var(--serif); font-weight:500; font-size:clamp(2.3rem, 10vw, 4rem); letter-spacing:-.04em; }
+    header p { margin:.65rem auto 0; max-width:36rem; color:var(--muted); line-height:1.55; }
+    form { display:grid; gap:1rem; padding:1rem; border:1px solid var(--line); border-radius:1.6rem; background:rgba(255,255,255,.58); }
+    .field { display:grid; gap:.42rem; }
+    .field > span, fieldset legend { font-size:.82rem; font-weight:700; color:#746b68; }
+    input, textarea, select, button { font:inherit; }
+    input, textarea, select { width:100%; border:1px solid #ded2cb; border-radius:.9rem; background:#fffdfb; color:var(--ink); padding:.8rem .85rem; outline:none; }
+    input:focus, textarea:focus, select:focus { border-color:#bd9ea2; box-shadow:0 0 0 3px rgba(189,158,162,.13); }
+    textarea { min-height:7rem; resize:vertical; line-height:1.45; }
+    .photo-box { display:grid; place-items:center; min-height:14rem; overflow:hidden; border:1px dashed #d8c9c2; border-radius:1.1rem; background:#fffaf7; color:var(--muted); }
+    .photo-box img { width:100%; max-height:28rem; object-fit:contain; }
+    .photo-box.has-photo { border-style:solid; }
+    fieldset { margin:0; padding:0; border:0; }
+    .date-grid { display:grid; grid-template-columns:1fr 1.6fr; gap:.7rem; margin-top:.4rem; }
+    .date-inputs [hidden] { display:none !important; }
+    .helper { margin:.25rem 0 0; color:var(--muted); font-size:.78rem; line-height:1.45; }
+    .actions { display:grid; grid-template-columns:1fr 1fr; gap:.7rem; margin-top:.3rem; }
+    button { border:0; border-radius:1rem; padding:.9rem 1rem; font-weight:750; color:#514847; background:var(--pink); }
+    button.secondary { background:var(--sage); }
+    button:disabled { opacity:.45; cursor:not-allowed; }
+    .status { min-height:1.4rem; margin:.2rem .2rem 0; color:#776a67; font-size:.82rem; line-height:1.45; }
+    .steps { margin-top:1rem; padding:1rem 1.1rem; border:1px solid var(--line); border-radius:1.2rem; background:#fffaf6; color:var(--muted); font-size:.87rem; line-height:1.55; }
+    .steps strong { color:var(--ink); }
+    code { font-family:ui-monospace, SFMono-Regular, Menlo, monospace; font-size:.9em; }
+    @media (max-width:560px) { .actions, .date-grid { grid-template-columns:1fr; } }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <h1>Add a soft toy</h1>
+      <p>This helper does not change the live website by itself. It creates two tidy files you can save to your iCloud “Soft Toy Inbox” and import later on your Mac.</p>
+    </header>
+
+    <form id="toyForm">
+      <label class="field">
+        <span>Photo</span>
+        <input id="photo" type="file" accept="image/*" capture="environment" required>
+      </label>
+      <div id="photoPreview" class="photo-box">photo preview</div>
+
+      <label class="field">
+        <span>Given name</span>
+        <input id="name" type="text" placeholder="e.g. Marmalade" maxlength="80" required>
+      </label>
+
+      <label class="field">
+        <span>Official model / brand</span>
+        <input id="officialModel" type="text" placeholder="e.g. Jellycat Bashful Bunny — Medium" maxlength="160">
+      </label>
+
+      <fieldset>
+        <legend>Date added to collection</legend>
+        <div class="date-grid">
+          <select id="datePrecision" aria-label="Date precision">
+            <option value="day">Exact date</option>
+            <option value="month">Month only</option>
+            <option value="year">Year only</option>
+          </select>
+          <div class="date-inputs">
+            <input id="dateDay" type="date" aria-label="Exact date">
+            <input id="dateMonth" type="month" aria-label="Month" hidden>
+            <input id="dateYear" type="number" inputmode="numeric" min="1900" max="2100" placeholder="Year" aria-label="Year" hidden>
+          </div>
+        </div>
+        <p class="helper">Choose only as much detail as you actually know.</p>
+      </fieldset>
+
+      <label class="field">
+        <span>Fun facts</span>
+        <textarea id="funFacts" placeholder="One fact per line, for example:&#10;Found at a flea market in Berlin&#10;Always sits on the left side of the bed"></textarea>
+      </label>
+
+      <button id="shareBoth" type="button">Save / share both files</button>
+      <div class="actions">
+        <button id="savePhoto" class="secondary" type="button">Fallback: photo</button>
+        <button id="saveEntry" class="secondary" type="button">Fallback: entry file</button>
+      </div>
+      <div id="status" class="status" aria-live="polite"></div>
+    </form>
+
+    <div class="steps">
+      <strong>On iPhone:</strong> use <em>Save / share both files</em> first. On supported Safari versions it opens the iOS share sheet, where you can choose <em>Save to Files</em> and put both files straight into <code>Soft Toy Inbox</code> in iCloud Drive. If your browser will not share both files together, use the two fallback buttons. The filenames are matched automatically later, so you do not have to rename anything.
+    </div>
+  </main>
+
+  <script>
+    const form = document.querySelector('#toyForm');
+    const photoInput = document.querySelector('#photo');
+    const preview = document.querySelector('#photoPreview');
+    const precision = document.querySelector('#datePrecision');
+    const dayInput = document.querySelector('#dateDay');
+    const monthInput = document.querySelector('#dateMonth');
+    const yearInput = document.querySelector('#dateYear');
+    const shareBothButton = document.querySelector('#shareBoth');
+    const savePhotoButton = document.querySelector('#savePhoto');
+    const saveEntryButton = document.querySelector('#saveEntry');
+    const status = document.querySelector('#status');
+
+    let prepared = null;
+
+    const now = new Date();
+    const yyyy = now.getFullYear();
+    const mm = String(now.getMonth() + 1).padStart(2, '0');
+    const dd = String(now.getDate()).padStart(2, '0');
+    dayInput.value = `${yyyy}-${mm}-${dd}`;
+    monthInput.value = `${yyyy}-${mm}`;
+    yearInput.value = yyyy;
+
+    function slugify(text) {
+      return text.normalize('NFKD').replace(/[\u0300-\u036f]/g, '')
+        .toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 48) || 'soft-toy';
+    }
+
+    function setPrecision() {
+      dayInput.hidden = precision.value !== 'day';
+      monthInput.hidden = precision.value !== 'month';
+      yearInput.hidden = precision.value !== 'year';
+      prepared = null;
+    }
+    precision.addEventListener('change', setPrecision);
+
+    photoInput.addEventListener('change', () => {
+      const file = photoInput.files?.[0];
+      prepared = null;
+      if (!file) {
+        preview.textContent = 'photo preview';
+        preview.classList.remove('has-photo');
+        return;
+      }
+      const img = document.createElement('img');
+      img.alt = 'Selected soft toy photo';
+      img.src = URL.createObjectURL(file);
+      preview.replaceChildren(img);
+      preview.classList.add('has-photo');
+    });
+
+    form.addEventListener('input', () => { prepared = null; status.textContent = ''; });
+
+    function currentDateAdded() {
+      if (precision.value === 'year') return { precision: 'year', value: String(yearInput.value).padStart(4, '0') };
+      if (precision.value === 'month') return { precision: 'month', value: monthInput.value };
+      return { precision: 'day', value: dayInput.value };
+    }
+
+    async function prepareFiles() {
+      if (prepared) return prepared;
+      if (!form.reportValidity()) throw new Error('Please fill in the required fields first.');
+      const file = photoInput.files?.[0];
+      if (!file) throw new Error('Please choose a photo first.');
+
+      const name = document.querySelector('#name').value.trim();
+      const id = `${slugify(name)}-${Date.now()}`;
+      const imageFile = `${id}.jpg`;
+
+      const bitmap = await createImageBitmap(file, { imageOrientation: 'from-image' });
+      const maxSide = 1600;
+      const scale = Math.min(1, maxSide / Math.max(bitmap.width, bitmap.height));
+      const width = Math.round(bitmap.width * scale);
+      const height = Math.round(bitmap.height * scale);
+      const canvas = document.createElement('canvas');
+      canvas.width = width; canvas.height = height;
+      canvas.getContext('2d').drawImage(bitmap, 0, 0, width, height);
+      const imageBlob = await new Promise((resolve) => canvas.toBlob(resolve, 'image/jpeg', .86));
+
+      const entry = {
+        id,
+        name,
+        officialModel: document.querySelector('#officialModel').value.trim(),
+        imageFile,
+        dateAdded: currentDateAdded(),
+        funFacts: document.querySelector('#funFacts').value.split('\n').map(s => s.trim()).filter(Boolean)
+      };
+
+      const entryBlob = new Blob([JSON.stringify(entry, null, 2) + '\n'], { type: 'application/json' });
+      prepared = { id, imageFile, imageBlob, entryBlob, entryFile: `${id}.toy-entry.json` };
+      return prepared;
+    }
+
+    function download(blob, filename) {
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 2000);
+    }
+
+
+    shareBothButton.addEventListener('click', async () => {
+      try {
+        status.textContent = 'Preparing files…';
+        const files = await prepareFiles();
+        const imageFile = new File([files.imageBlob], files.imageFile, { type: 'image/jpeg' });
+        const entryFile = new File([files.entryBlob], files.entryFile, { type: 'application/json' });
+        const shareData = { files: [imageFile, entryFile], title: 'Soft toy entry' };
+
+        if (navigator.share && (!navigator.canShare || navigator.canShare(shareData))) {
+          await navigator.share(shareData);
+          status.textContent = 'Share sheet opened. Choose Save to Files and select your iCloud Soft Toy Inbox.';
+        } else {
+          status.textContent = 'This browser cannot share both files together. Use the two fallback buttons below.';
+        }
+      } catch (error) {
+        if (error.name === 'AbortError') status.textContent = 'Share cancelled.';
+        else status.textContent = error.message;
+      }
+    });
+
+    savePhotoButton.addEventListener('click', async () => {
+      try {
+        status.textContent = 'Preparing photo…';
+        const files = await prepareFiles();
+        download(files.imageBlob, files.imageFile);
+        status.textContent = `Saved ${files.imageFile}. On iPhone, use the download/share controls to place it in your iCloud Soft Toy Inbox.`;
+      } catch (error) { status.textContent = error.message; }
+    });
+
+    saveEntryButton.addEventListener('click', async () => {
+      try {
+        status.textContent = 'Preparing entry…';
+        const files = await prepareFiles();
+        download(files.entryBlob, files.entryFile);
+        status.textContent = `Saved ${files.entryFile}. Keep it in the same iCloud folder as the photo.`;
+      } catch (error) { status.textContent = error.message; }
+    });
+  </script>
+</body>
+</html>
