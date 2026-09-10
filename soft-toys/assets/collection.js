@@ -145,11 +145,13 @@ function cardMarkup(toy) {
   return `
     <article class="toy-card${statusClass}">
       <button class="card-button" type="button" data-toy-id="${escapeHtml(toy.id)}" aria-label="Open details for ${escapeHtml(toy.name)}">
-        <div class="photo-wrap">${imageMarkup(toy, "", "gallery")}</div>
+        <div class="photo-wrap">
+          ${imageMarkup(toy, "", "gallery")}
+          ${cardStatusMarkup(toy)}
+        </div>
         <div class="card-body">
           <div class="card-date">${escapeHtml(cardDateText(toy))}</div>
           <h2 class="toy-name">${escapeHtml(toy.name)}</h2>
-          ${cardStatusMarkup(toy)}
           ${official}
           ${firstFact}
         </div>

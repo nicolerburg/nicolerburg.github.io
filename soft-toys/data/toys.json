@@ -210,5 +210,180 @@
         "zoom": 1.12
       }
     }
+  },
+  {
+    "id": "madeline-1789050958813",
+    "name": "Madeline",
+    "officialModel": "Unknown",
+    "species": "Dog",
+    "spawnLocation": "Heroes Dutch Comic Con",
+    "collectionStatus": {
+      "state": "active"
+    },
+    "relatives": [],
+    "image": "madeline-1789050958813.jpg",
+    "dateAdded": {
+      "precision": "day",
+      "value": "2024-11-23"
+    },
+    "funFacts": [
+      "Madeline loves watching TV and playing video games.",
+      "She sometimes stalks Sawyer…"
+    ],
+    "photoDisplay": {
+      "gallery": {
+        "fit": "cover",
+        "x": 50,
+        "y": 96,
+        "zoom": 1.07
+      },
+      "profile": {
+        "fit": "cover",
+        "x": 50,
+        "y": 72,
+        "zoom": 1.08
+      }
+    }
+  },
+  {
+    "id": "tai-1789050737622",
+    "name": "Tai",
+    "officialModel": "Squishmallow",
+    "species": "Sugar Glider",
+    "spawnLocation": "CVS Connecticut",
+    "collectionStatus": {
+      "state": "active"
+    },
+    "relatives": [],
+    "image": "tai-1789050737622.jpg",
+    "dateAdded": {
+      "precision": "month",
+      "value": "2023-04"
+    },
+    "funFacts": [
+      "Tai is an Easter special edition, but don’t tell them that their bunny ears aren’t real!"
+    ],
+    "photoDisplay": {
+      "gallery": {
+        "fit": "cover",
+        "x": 55,
+        "y": 50,
+        "zoom": 1.05
+      },
+      "profile": {
+        "fit": "cover",
+        "x": 50,
+        "y": 0,
+        "zoom": 1.19
+      }
+    }
+  },
+  {
+    "id": "igor-keksiovich-1789051520837",
+    "name": "Igor Keksiovich",
+    "officialModel": "Unknown",
+    "species": "Dog",
+    "spawnLocation": "Heroes Dutch Comic Con",
+    "collectionStatus": {
+      "state": "active"
+    },
+    "relatives": [],
+    "image": "igor-keksiovich-1789051520837.jpg",
+    "dateAdded": {
+      "precision": "day",
+      "value": "2026-06-20"
+    },
+    "funFacts": [
+      "Igor’s mother was called Keksi, even though most assume it was his father’s name.",
+      "Igor and Madeline were separated at birth, but eventually reunited in the collection.",
+      "He has an unsavory past. Ask him about it…if you dare."
+    ],
+    "photoDisplay": {
+      "gallery": {
+        "fit": "cover",
+        "x": 50,
+        "y": 86,
+        "zoom": 1.13
+      },
+      "profile": {
+        "fit": "cover",
+        "x": 50,
+        "y": 75,
+        "zoom": 1.16
+      }
+    }
+  },
+  {
+    "id": "llama-1789051843122",
+    "name": "Llama",
+    "officialModel": "Alpacasso",
+    "species": "Alpaca",
+    "spawnLocation": "Anime Con Rijswijk",
+    "collectionStatus": {
+      "state": "active"
+    },
+    "relatives": [],
+    "image": "llama-1789051843122.jpg",
+    "dateAdded": {
+      "precision": "day",
+      "value": "2025-05-03"
+    },
+    "funFacts": [
+      "Llama was purchased second hand and meticulously restored via washing, brushing, and love!",
+      "She is the guardian of the 3D printer and wants to be an engineer when she grows up!",
+      "She was the first Alpacasso acquired after the sad loss of the goodnight Alpacasso duo."
+    ],
+    "photoDisplay": {
+      "gallery": {
+        "fit": "cover",
+        "x": 50,
+        "y": 50,
+        "zoom": 1
+      },
+      "profile": {
+        "fit": "cover",
+        "x": 100,
+        "y": 50,
+        "zoom": 1.01
+      }
+    }
+  },
+  {
+    "id": "goodnight-alpacas-1789052795049",
+    "name": "Goodnight Alpacas",
+    "officialModel": "Alpacasso",
+    "species": "Alpaca",
+    "spawnLocation": "Magic City Comic Con",
+    "collectionStatus": {
+      "state": "memory",
+      "endDate": {
+        "precision": "year",
+        "value": "2024"
+      }
+    },
+    "relatives": [],
+    "image": "goodnight-alpacas-1789052795049.jpeg",
+    "dateAdded": {
+      "precision": "month",
+      "value": "2015-01"
+    },
+    "funFacts": [
+      "These alpacas lived above the bed in Florida, always bringing joy and love to the room.",
+      "They were unfortunately lost during the selling of the home and could not be recovered. We will always remember them."
+    ],
+    "photoDisplay": {
+      "gallery": {
+        "fit": "cover",
+        "x": 50,
+        "y": 0,
+        "zoom": 1.02
+      },
+      "profile": {
+        "fit": "cover",
+        "x": 50,
+        "y": 43,
+        "zoom": 1.03
+      }
+    }
   }
 ]
