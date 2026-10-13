@@ -1,0 +1,675 @@
+[
+  {
+    "id": "agent-buster-1789035546419",
+    "name": "Agent Buster",
+    "officialModel": "Buizel Pokemon USA Unknown Model",
+    "species": "Pokemon",
+    "image": "agent-buster-1789035546419.jpg",
+    "dateAdded": {
+      "precision": "year",
+      "value": "2008"
+    },
+    "funFacts": [
+      "Agent Buster is the oldest soft toy in the collection!",
+      "He watches over all of the the others and keeps them safe."
+    ],
+    "photoDisplay": {
+      "gallery": {
+        "fit": "cover",
+        "x": 50,
+        "y": 46,
+        "zoom": 1
+      },
+      "profile": {
+        "fit": "contain",
+        "x": 50,
+        "y": 50,
+        "zoom": 1
+      }
+    }
+  },
+  {
+    "id": "raldolfo-1789040590246",
+    "name": "Raldolfo",
+    "officialModel": "Stretchy Corgi",
+    "image": "raldolfo-1791902538269-xnzhz-main.jpg",
+    "gallery": [
+      "raldolfo-1791902538269-xnzhz-gallery-01.jpg"
+    ],
+    "species": "Dog",
+    "spawnLocation": "Gamestate Arcade Den Haag",
+    "dateAdded": {
+      "precision": "day",
+      "value": "2024-04-07"
+    },
+    "status": "active",
+    "endDate": {
+      "precision": "day",
+      "value": "2025-12-18"
+    },
+    "rejoinDate": {
+      "precision": "day",
+      "value": "2026-10-10"
+    },
+    "funFacts": [
+      "Raldolfo was rescued from behind a prize counter.",
+      "He lived a wonderful and happy life on Martin's desk and beside the bed.",
+      "He will be honored in the future name of our dog.",
+      "Raldolfo rose again after being discovered when shopping for fidget toys!"
+    ],
+    "photoDisplay": {
+      "gallery": {
+        "fit": "cover",
+        "x": 50.0,
+        "y": 50.0,
+        "zoom": 1.0
+      },
+      "profile": {
+        "fit": "cover",
+        "x": 50.0,
+        "y": 47.0,
+        "zoom": 1.0
+      }
+    }
+  },
+  {
+    "id": "larry-1789042533858",
+    "name": "Larry",
+    "officialModel": "Unknown",
+    "species": "Turtle",
+    "spawnLocation": "Tampa Aquarium",
+    "collectionStatus": {
+      "state": "active"
+    },
+    "image": "larry.jpeg",
+    "dateAdded": {
+      "precision": "month",
+      "value": "2017-12"
+    },
+    "relatives": [
+      {
+        "relationship": "Daughter",
+        "toyId": "olive-1789042367318"
+      }
+    ],
+    "funFacts": [
+      "Larry is a home body, but he loves watching Olive travel the world!"
+    ],
+    "photoDisplay": {
+      "gallery": {
+        "fit": "cover",
+        "x": 56,
+        "y": 54,
+        "zoom": 1.13
+      },
+      "profile": {
+        "fit": "cover",
+        "x": 28,
+        "y": 50,
+        "zoom": 1
+      }
+    }
+  },
+  {
+    "id": "olive-1789042367318",
+    "name": "Olive",
+    "officialModel": "Unknown",
+    "species": "Turtle",
+    "spawnLocation": "Tampa Aquarium",
+    "collectionStatus": {
+      "state": "active"
+    },
+    "relatives": [
+      {
+        "relationship": "Father",
+        "toyId": "larry-1789042533858"
+      }
+    ],
+    "image": "olive-1789042367318.jpg",
+    "dateAdded": {
+      "precision": "month",
+      "value": "2017-12"
+    },
+    "funFacts": [
+      "Olive loves to travel! Her favorite place is Martin’s backpack.",
+      "She always wears a black scrunchie."
+    ],
+    "photoDisplay": {
+      "gallery": {
+        "fit": "cover",
+        "x": 50,
+        "y": 50,
+        "zoom": 1
+      },
+      "profile": {
+        "fit": "cover",
+        "x": 50,
+        "y": 50,
+        "zoom": 1
+      }
+    }
+  },
+  {
+    "id": "jerboa-1789048744902",
+    "name": "Jerboa",
+    "officialModel": "Jellycat Jerboa",
+    "species": "Jerboa",
+    "spawnLocation": "Delft",
+    "collectionStatus": {
+      "state": "active"
+    },
+    "relatives": [],
+    "image": "jerboa-1789048744902.jpg",
+    "dateAdded": {
+      "precision": "day",
+      "value": "2026-03-10"
+    },
+    "funFacts": [
+      "Jerboa came to us all the way from the UK!"
+    ],
+    "photoDisplay": {
+      "gallery": {
+        "fit": "cover",
+        "x": 24,
+        "y": 22,
+        "zoom": 1.1
+      },
+      "profile": {
+        "fit": "cover",
+        "x": 50,
+        "y": 1,
+        "zoom": 1
+      }
+    }
+  },
+  {
+    "id": "moomin-1789049054988",
+    "name": "Moomin",
+    "officialModel": "Palm Pals Moomin",
+    "species": "Moomin",
+    "spawnLocation": "Espoo",
+    "collectionStatus": {
+      "state": "active"
+    },
+    "relatives": [],
+    "image": "moomin-1789049054988.jpg",
+    "dateAdded": {
+      "precision": "day",
+      "value": "2026-06-28"
+    },
+    "funFacts": [
+      "This Moomin was an anniversary gift that accidentally got shipped to Finland and so we didn’t get to meet him for almost 3 months!",
+      "Super soft and tossable!"
+    ],
+    "photoDisplay": {
+      "gallery": {
+        "fit": "cover",
+        "x": 38,
+        "y": 79,
+        "zoom": 1.19
+      },
+      "profile": {
+        "fit": "cover",
+        "x": 61,
+        "y": 57,
+        "zoom": 1.12
+      }
+    }
+  },
+  {
+    "id": "madeline-1789050958813",
+    "name": "Madeline",
+    "officialModel": "Amuse Mameshiba",
+    "species": "Dog",
+    "spawnLocation": "Heroes Dutch Comic Con",
+    "collectionStatus": {
+      "state": "active"
+    },
+    "relatives": [
+      {
+        "relationship": "Brother",
+        "toyId": "igor-keksiovich-1789051520837"
+      }
+    ],
+    "image": "madeline-1789050958813.jpg",
+    "dateAdded": {
+      "precision": "day",
+      "value": "2024-11-23"
+    },
+    "funFacts": [
+      "Madeline loves watching TV and playing video games.",
+      "She sometimes stalks Sawyer…"
+    ],
+    "photoDisplay": {
+      "gallery": {
+        "fit": "cover",
+        "x": 50,
+        "y": 96,
+        "zoom": 1.07
+      },
+      "profile": {
+        "fit": "cover",
+        "x": 50,
+        "y": 72,
+        "zoom": 1.08
+      }
+    }
+  },
+  {
+    "id": "tai-1789050737622",
+    "name": "Tai",
+    "officialModel": "Squishmallow",
+    "species": "Sugar Glider",
+    "spawnLocation": "CVS Connecticut",
+    "collectionStatus": {
+      "state": "active"
+    },
+    "relatives": [],
+    "image": "tai-1789050737622.jpg",
+    "dateAdded": {
+      "precision": "month",
+      "value": "2023-04"
+    },
+    "funFacts": [
+      "Tai is an Easter special edition, but don’t tell them that their bunny ears aren’t real!"
+    ],
+    "photoDisplay": {
+      "gallery": {
+        "fit": "cover",
+        "x": 55,
+        "y": 50,
+        "zoom": 1.05
+      },
+      "profile": {
+        "fit": "cover",
+        "x": 50,
+        "y": 0,
+        "zoom": 1.19
+      }
+    }
+  },
+  {
+    "id": "igor-keksiovich-1789051520837",
+    "name": "Igor Keksiovich",
+    "officialModel": "Amuse Mameshiba",
+    "species": "Dog",
+    "spawnLocation": "Heroes Dutch Comic Con",
+    "collectionStatus": {
+      "state": "active"
+    },
+    "relatives": [
+      {
+        "relationship": "Sister",
+        "toyId": "madeline-1789050958813"
+      }
+    ],
+    "image": "igor-keksiovich-1789051520837.jpg",
+    "dateAdded": {
+      "precision": "day",
+      "value": "2026-06-20"
+    },
+    "funFacts": [
+      "Igor’s mother was called Keksi, even though most assume it was his father’s name.",
+      "Igor and Madeline were separated at birth, but eventually reunited in the collection.",
+      "He has an unsavory past. Ask him about it…if you dare."
+    ],
+    "photoDisplay": {
+      "gallery": {
+        "fit": "cover",
+        "x": 50,
+        "y": 86,
+        "zoom": 1.13
+      },
+      "profile": {
+        "fit": "cover",
+        "x": 50,
+        "y": 75,
+        "zoom": 1.16
+      }
+    }
+  },
+  {
+    "id": "llama-1789051843122",
+    "name": "Llama",
+    "officialModel": "Alpacasso",
+    "species": "Alpaca",
+    "spawnLocation": "Anime Con Rijswijk",
+    "collectionStatus": {
+      "state": "active"
+    },
+    "relatives": [],
+    "image": "llama-1789051843122.jpg",
+    "dateAdded": {
+      "precision": "day",
+      "value": "2025-05-03"
+    },
+    "funFacts": [
+      "Llama was purchased second hand and meticulously restored via washing, brushing, and love!",
+      "She is the guardian of the 3D printer and wants to be an engineer when she grows up!",
+      "She was the first Alpacasso acquired after the sad loss of the goodnight Alpacasso duo."
+    ],
+    "photoDisplay": {
+      "gallery": {
+        "fit": "cover",
+        "x": 50,
+        "y": 50,
+        "zoom": 1
+      },
+      "profile": {
+        "fit": "cover",
+        "x": 100,
+        "y": 50,
+        "zoom": 1.01
+      }
+    }
+  },
+  {
+    "id": "goodnight-alpacas-1789052795049",
+    "name": "Goodnight Alpacas",
+    "officialModel": "Alpacasso",
+    "species": "Alpaca",
+    "spawnLocation": "Magic City Comic Con",
+    "collectionStatus": {
+      "state": "memory",
+      "endDate": {
+        "precision": "year",
+        "value": "2024"
+      }
+    },
+    "relatives": [],
+    "image": "goodnight-alpacas-1789052795049.jpeg",
+    "dateAdded": {
+      "precision": "month",
+      "value": "2015-01"
+    },
+    "funFacts": [
+      "These alpacas lived above the bed in Florida, always bringing joy and love to the room.",
+      "They were unfortunately lost during the selling of the home and could not be recovered. We will always remember them."
+    ],
+    "photoDisplay": {
+      "gallery": {
+        "fit": "cover",
+        "x": 50,
+        "y": 0,
+        "zoom": 1.02
+      },
+      "profile": {
+        "fit": "cover",
+        "x": 50,
+        "y": 43,
+        "zoom": 1.03
+      }
+    }
+  },
+  {
+    "id": "hedger-1789745589194",
+    "name": "Hedger",
+    "officialModel": "Handmade",
+    "species": "Hedgehog",
+    "spawnLocation": "Knitting needles",
+    "collectionStatus": {
+      "state": "active"
+    },
+    "relatives": [],
+    "image": "hedger-1789745589194.jpg",
+    "dateAdded": {
+      "precision": "day",
+      "value": "2023-03-17"
+    },
+    "funFacts": [
+      "The first of many hedgers!",
+      "Made with love and care and hedger cuteness."
+    ],
+    "photoDisplay": {
+      "gallery": {
+        "fit": "cover",
+        "x": 50,
+        "y": 0,
+        "zoom": 1.7
+      },
+      "profile": {
+        "fit": "cover",
+        "x": 50,
+        "y": 0,
+        "zoom": 1.7
+      }
+    }
+  },
+  {
+    "id": "ikea-rat-1789745346682",
+    "name": "Ikea Rat",
+    "officialModel": "Gosig Råtta",
+    "species": "Rat",
+    "spawnLocation": "Ikea Delft",
+    "collectionStatus": {
+      "state": "active"
+    },
+    "relatives": [],
+    "image": "ikea-rat-1789745346682.jpg",
+    "dateAdded": {
+      "precision": "month",
+      "value": "2024-10"
+    },
+    "funFacts": [
+      "A bit of a sneaky boi",
+      "Loves to scurry around causing chaos"
+    ],
+    "photoDisplay": {
+      "gallery": {
+        "fit": "cover",
+        "x": 49,
+        "y": 50,
+        "zoom": 1
+      },
+      "profile": {
+        "fit": "cover",
+        "x": 55,
+        "y": 50,
+        "zoom": 1
+      }
+    }
+  },
+  {
+    "id": "biscuit-1789751041479",
+    "name": "Biscuit",
+    "officialModel": "Shiba Inu",
+    "species": "Dog",
+    "spawnLocation": "Miniso",
+    "collectionStatus": {
+      "state": "active"
+    },
+    "relatives": [],
+    "image": "biscuit-1789751041479.jpg",
+    "dateAdded": {
+      "precision": "year",
+      "value": "2024"
+    },
+    "funFacts": [
+      "Biscuit is bouncy and loves piggy back rides!",
+      "He is the roundest shiba inu in the collection",
+      "Found in Miniso right before some disappointing European Dunkin Donuts!"
+    ],
+    "photoDisplay": {
+      "gallery": {
+        "fit": "cover",
+        "x": 59,
+        "y": 50,
+        "zoom": 1.7
+      },
+      "profile": {
+        "fit": "cover",
+        "x": 50,
+        "y": 50,
+        "zoom": 1
+      }
+    }
+  },
+  {
+    "id": "hazel-1791817849086",
+    "name": "Hazel",
+    "officialModel": "Palm Pal",
+    "species": "Flying Squirrel",
+    "spawnLocation": "Comic Con",
+    "collectionStatus": {
+      "state": "active"
+    },
+    "relatives": [],
+    "image": "hazel-1791817849086.jpg",
+    "dateAdded": {
+      "precision": "year",
+      "value": "2025"
+    },
+    "funFacts": [
+      "While many of Hazel’s relatives have been spotted in the wild over the years, none but her have been added to the family!"
+    ],
+    "photoDisplay": {
+      "gallery": {
+        "fit": "cover",
+        "x": 50,
+        "y": 50,
+        "zoom": 1
+      },
+      "profile": {
+        "fit": "cover",
+        "x": 50,
+        "y": 9,
+        "zoom": 1
+      }
+    }
+  },
+  {
+    "id": "mother-mouse-1791818197424",
+    "name": "Mother Mouse",
+    "officialModel": "Sam & Julia",
+    "species": "Mouse",
+    "spawnLocation": "Het Muizenhuis",
+    "collectionStatus": {
+      "state": "active"
+    },
+    "relatives": [],
+    "image": "mother-mouse-1791818197424.jpg",
+    "dateAdded": {
+      "precision": "day",
+      "value": "2023-09-30"
+    },
+    "funFacts": [
+      "Purest of heart and always looking out for the family.",
+      "She’s a mouse, deal with it."
+    ],
+    "photoDisplay": {
+      "gallery": {
+        "fit": "cover",
+        "x": 50,
+        "y": 67,
+        "zoom": 1.35
+      },
+      "profile": {
+        "fit": "cover",
+        "x": 50,
+        "y": 64,
+        "zoom": 1.22
+      }
+    }
+  },
+  {
+    "id": "munch-munch-1791817377868",
+    "name": "Munch Munch",
+    "officialModel": "Miniso Yummy Yummy",
+    "species": "Hamster",
+    "spawnLocation": "Comic Con",
+    "collectionStatus": {
+      "state": "active"
+    },
+    "relatives": [],
+    "image": "munch-munch-1791817377868.jpg",
+    "dateAdded": {
+      "precision": "year",
+      "value": "2024"
+    },
+    "funFacts": [
+      "Munch Munch is always on the hunt for snacks, don’t leave your pantry unattended!"
+    ],
+    "photoDisplay": {
+      "gallery": {
+        "fit": "cover",
+        "x": 50,
+        "y": 17,
+        "zoom": 1.19
+      },
+      "profile": {
+        "fit": "cover",
+        "x": 50,
+        "y": 42,
+        "zoom": 1
+      }
+    }
+  },
+  {
+    "id": "penguin-1791818022959",
+    "name": "Penguin",
+    "officialModel": "Unknown",
+    "species": "Penguin",
+    "spawnLocation": "Nausicaa Aquarium",
+    "collectionStatus": {
+      "state": "active"
+    },
+    "relatives": [],
+    "image": "penguin-1791818022959.jpg",
+    "dateAdded": {
+      "precision": "day",
+      "value": "2025-05-29"
+    },
+    "funFacts": [
+      "Penguin served on the allied forces.",
+      "He was there when the beaches of Normandy were stormed.",
+      "Thank you for your service, Penguin."
+    ],
+    "photoDisplay": {
+      "gallery": {
+        "fit": "cover",
+        "x": 67,
+        "y": 50,
+        "zoom": 1.08
+      },
+      "profile": {
+        "fit": "cover",
+        "x": 50,
+        "y": 50,
+        "zoom": 1
+      }
+    }
+  },
+  {
+    "id": "steggo-1791817527456",
+    "name": "Steggo",
+    "officialModel": "Sostrene Grene",
+    "species": "Stegosaurus",
+    "spawnLocation": "Den Haag",
+    "collectionStatus": {
+      "state": "active"
+    },
+    "relatives": [],
+    "image": "steggo-1791817527456.jpg",
+    "dateAdded": {
+      "precision": "year",
+      "value": "2023"
+    },
+    "funFacts": [
+      "Steggo has the softest fur out of everyone in the family! Kind of ironic since he is the only one with scales!"
+    ],
+    "photoDisplay": {
+      "gallery": {
+        "fit": "cover",
+        "x": 50,
+        "y": 50,
+        "zoom": 1
+      },
+      "profile": {
+        "fit": "cover",
+        "x": 70,
+        "y": 50,
+        "zoom": 1
+      }
+    }
+  }
+]
