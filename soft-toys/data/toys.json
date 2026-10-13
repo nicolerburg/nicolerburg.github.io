@@ -76,7 +76,7 @@
     "collectionStatus": {
       "state": "active"
     },
-    "image": "larry-1789042533858.jpg",
+    "image": "larry.jpeg",
     "dateAdded": {
       "precision": "month",
       "value": "2017-12"
@@ -101,7 +101,7 @@
         "fit": "cover",
         "x": 28,
         "y": 50,
-        "zoom": 1.17
+        "zoom": 1
       }
     }
   },
@@ -214,13 +214,18 @@
   {
     "id": "madeline-1789050958813",
     "name": "Madeline",
-    "officialModel": "Unknown",
+    "officialModel": "Amuse Mameshiba",
     "species": "Dog",
     "spawnLocation": "Heroes Dutch Comic Con",
     "collectionStatus": {
       "state": "active"
     },
-    "relatives": [],
+    "relatives": [
+      {
+        "relationship": "Brother",
+        "toyId": "igor-keksiovich-1789051520837"
+      }
+    ],
     "image": "madeline-1789050958813.jpg",
     "dateAdded": {
       "precision": "day",
@@ -281,13 +286,18 @@
   {
     "id": "igor-keksiovich-1789051520837",
     "name": "Igor Keksiovich",
-    "officialModel": "Unknown",
+    "officialModel": "Amuse Mameshiba",
     "species": "Dog",
     "spawnLocation": "Heroes Dutch Comic Con",
     "collectionStatus": {
       "state": "active"
     },
-    "relatives": [],
+    "relatives": [
+      {
+        "relationship": "Sister",
+        "toyId": "madeline-1789050958813"
+      }
+    ],
     "image": "igor-keksiovich-1789051520837.jpg",
     "dateAdded": {
       "precision": "day",
@@ -383,6 +393,277 @@
         "x": 50,
         "y": 43,
         "zoom": 1.03
+      }
+    }
+  },
+  {
+    "id": "hedger-1789745589194",
+    "name": "Hedger",
+    "officialModel": "Handmade",
+    "species": "Hedgehog",
+    "spawnLocation": "Knitting needles",
+    "collectionStatus": {
+      "state": "active"
+    },
+    "relatives": [],
+    "image": "hedger-1789745589194.jpg",
+    "dateAdded": {
+      "precision": "day",
+      "value": "2023-03-17"
+    },
+    "funFacts": [
+      "The first of many hedgers!",
+      "Made with love and care and hedger cuteness."
+    ],
+    "photoDisplay": {
+      "gallery": {
+        "fit": "cover",
+        "x": 50,
+        "y": 0,
+        "zoom": 1.7
+      },
+      "profile": {
+        "fit": "cover",
+        "x": 50,
+        "y": 0,
+        "zoom": 1.7
+      }
+    }
+  },
+  {
+    "id": "ikea-rat-1789745346682",
+    "name": "Ikea Rat",
+    "officialModel": "Gosig Råtta",
+    "species": "Rat",
+    "spawnLocation": "Ikea Delft",
+    "collectionStatus": {
+      "state": "active"
+    },
+    "relatives": [],
+    "image": "ikea-rat-1789745346682.jpg",
+    "dateAdded": {
+      "precision": "month",
+      "value": "2024-10"
+    },
+    "funFacts": [
+      "A bit of a sneaky boi",
+      "Loves to scurry around causing chaos"
+    ],
+    "photoDisplay": {
+      "gallery": {
+        "fit": "cover",
+        "x": 49,
+        "y": 50,
+        "zoom": 1
+      },
+      "profile": {
+        "fit": "cover",
+        "x": 55,
+        "y": 50,
+        "zoom": 1
+      }
+    }
+  },
+  {
+    "id": "biscuit-1789751041479",
+    "name": "Biscuit",
+    "officialModel": "Shiba Inu",
+    "species": "Dog",
+    "spawnLocation": "Miniso",
+    "collectionStatus": {
+      "state": "active"
+    },
+    "relatives": [],
+    "image": "biscuit-1789751041479.jpg",
+    "dateAdded": {
+      "precision": "year",
+      "value": "2024"
+    },
+    "funFacts": [
+      "Biscuit is bouncy and loves piggy back rides!",
+      "He is the roundest shiba inu in the collection",
+      "Found in Miniso right before some disappointing European Dunkin Donuts!"
+    ],
+    "photoDisplay": {
+      "gallery": {
+        "fit": "cover",
+        "x": 59,
+        "y": 50,
+        "zoom": 1.7
+      },
+      "profile": {
+        "fit": "cover",
+        "x": 50,
+        "y": 50,
+        "zoom": 1
+      }
+    }
+  },
+  {
+    "id": "hazel-1791817849086",
+    "name": "Hazel",
+    "officialModel": "Palm Pal",
+    "species": "Flying Squirrel",
+    "spawnLocation": "Comic Con",
+    "collectionStatus": {
+      "state": "active"
+    },
+    "relatives": [],
+    "image": "hazel-1791817849086.jpg",
+    "dateAdded": {
+      "precision": "year",
+      "value": "2025"
+    },
+    "funFacts": [
+      "While many of Hazel’s relatives have been spotted in the wild over the years, none but her have been added to the family!"
+    ],
+    "photoDisplay": {
+      "gallery": {
+        "fit": "cover",
+        "x": 50,
+        "y": 50,
+        "zoom": 1
+      },
+      "profile": {
+        "fit": "cover",
+        "x": 50,
+        "y": 9,
+        "zoom": 1
+      }
+    }
+  },
+  {
+    "id": "mother-mouse-1791818197424",
+    "name": "Mother Mouse",
+    "officialModel": "Sam & Julia",
+    "species": "Mouse",
+    "spawnLocation": "Het Muizenhuis",
+    "collectionStatus": {
+      "state": "active"
+    },
+    "relatives": [],
+    "image": "mother-mouse-1791818197424.jpg",
+    "dateAdded": {
+      "precision": "day",
+      "value": "2023-09-30"
+    },
+    "funFacts": [
+      "Purest of heart and always looking out for the family.",
+      "She’s a mouse, deal with it."
+    ],
+    "photoDisplay": {
+      "gallery": {
+        "fit": "cover",
+        "x": 50,
+        "y": 67,
+        "zoom": 1.35
+      },
+      "profile": {
+        "fit": "cover",
+        "x": 50,
+        "y": 64,
+        "zoom": 1.22
+      }
+    }
+  },
+  {
+    "id": "munch-munch-1791817377868",
+    "name": "Munch Munch",
+    "officialModel": "Miniso Yummy Yummy",
+    "species": "Hamster",
+    "spawnLocation": "Comic Con",
+    "collectionStatus": {
+      "state": "active"
+    },
+    "relatives": [],
+    "image": "munch-munch-1791817377868.jpg",
+    "dateAdded": {
+      "precision": "year",
+      "value": "2024"
+    },
+    "funFacts": [
+      "Munch Munch is always on the hunt for snacks, don’t leave your pantry unattended!"
+    ],
+    "photoDisplay": {
+      "gallery": {
+        "fit": "cover",
+        "x": 50,
+        "y": 17,
+        "zoom": 1.19
+      },
+      "profile": {
+        "fit": "cover",
+        "x": 50,
+        "y": 42,
+        "zoom": 1
+      }
+    }
+  },
+  {
+    "id": "penguin-1791818022959",
+    "name": "Penguin",
+    "officialModel": "Unknown",
+    "species": "Penguin",
+    "spawnLocation": "Nausicaa Aquarium",
+    "collectionStatus": {
+      "state": "active"
+    },
+    "relatives": [],
+    "image": "penguin-1791818022959.jpg",
+    "dateAdded": {
+      "precision": "day",
+      "value": "2025-05-29"
+    },
+    "funFacts": [
+      "Penguin served on the allied forces.",
+      "He was there when the beaches of Normandy were stormed.",
+      "Thank you for your service, Penguin."
+    ],
+    "photoDisplay": {
+      "gallery": {
+        "fit": "cover",
+        "x": 67,
+        "y": 50,
+        "zoom": 1.08
+      },
+      "profile": {
+        "fit": "cover",
+        "x": 50,
+        "y": 50,
+        "zoom": 1
+      }
+    }
+  },
+  {
+    "id": "steggo-1791817527456",
+    "name": "Steggo",
+    "officialModel": "Sostrene Grene",
+    "species": "Stegosaurus",
+    "spawnLocation": "Den Haag",
+    "collectionStatus": {
+      "state": "active"
+    },
+    "relatives": [],
+    "image": "steggo-1791817527456.jpg",
+    "dateAdded": {
+      "precision": "year",
+      "value": "2023"
+    },
+    "funFacts": [
+      "Steggo has the softest fur out of everyone in the family! Kind of ironic since he is the only one with scales!"
+    ],
+    "photoDisplay": {
+      "gallery": {
+        "fit": "cover",
+        "x": 50,
+        "y": 50,
+        "zoom": 1
+      },
+      "profile": {
+        "fit": "cover",
+        "x": 70,
+        "y": 50,
+        "zoom": 1
       }
     }
   }

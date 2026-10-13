@@ -138,7 +138,6 @@ function cardStatusMarkup(toy) {
 
 function cardMarkup(toy) {
   const firstFact = toy.funFacts?.[0] ? `<p class="fact-preview">${escapeHtml(toy.funFacts[0])}</p>` : "";
-  const official = toy.officialModel ? `<p class="official-name">${escapeHtml(toy.officialModel)}</p>` : "";
   const state = statusState(toy);
   const statusClass = state === "active" ? "" : ` status-${state}`;
 
@@ -152,7 +151,6 @@ function cardMarkup(toy) {
         <div class="card-body">
           <div class="card-date">${escapeHtml(cardDateText(toy))}</div>
           <h2 class="toy-name">${escapeHtml(toy.name)}</h2>
-          ${official}
           ${firstFact}
         </div>
       </button>
@@ -379,6 +377,19 @@ function relativesMarkup(toy) {
     : "";
 }
 
+function resetProfileScroll() {
+  dialog.scrollTop = 0;
+  dialogContent.scrollTop = 0;
+
+  requestAnimationFrame(() => {
+    dialog.scrollTop = 0;
+    dialogContent.scrollTop = 0;
+    if (typeof dialog.scrollTo === "function") {
+      dialog.scrollTo({ top: 0, left: 0, behavior: "auto" });
+    }
+  });
+}
+
 function showToy(id) {
   const toy = toys.find((item) => item.id === id);
   if (!toy) return;
@@ -403,7 +414,9 @@ function showToy(id) {
       ${facts}
     </div>`;
 
+  resetProfileScroll();
   if (!dialog.open) dialog.showModal();
+  resetProfileScroll();
 }
 
 dialogContent.addEventListener("click", (event) => {
