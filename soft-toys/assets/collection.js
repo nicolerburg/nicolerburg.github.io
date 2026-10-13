@@ -1,493 +1,526 @@
-const DATA_URL = "./data/toys.json";
+(() => {
+  const DATA_URL = "./data/toys.json";
 
-const grid = document.querySelector("#collectionGrid");
-const count = document.querySelector("#collectionCount");
-const footerCount = document.querySelector("#footerCount");
-const searchInput = document.querySelector("#searchInput");
-const sortSelect = document.querySelector("#sortSelect");
-const emptyState = document.querySelector("#emptyState");
-const noResults = document.querySelector("#noResults");
-const dialog = document.querySelector("#toyDialog");
-const dialogContent = document.querySelector("#dialogContent");
-const dialogClose = dialog.querySelector(".dialog-close");
-const filterButton = document.querySelector("#filterButton");
-const filterPanel = document.querySelector("#filterPanel");
-const filterGroups = document.querySelector("#filterGroups");
-const filterCount = document.querySelector("#filterCount");
-const clearFilters = document.querySelector("#clearFilters");
-const activeFilterChips = document.querySelector("#activeFilterChips");
-const filterMenuWrap = document.querySelector(".filter-menu-wrap");
-
-let toys = [];
-const selectedFilters = {
-  status: new Set(),
-  species: new Set(),
-  spawnLocation: new Set(),
-  year: new Set()
-};
-
-function escapeHtml(value = "") {
-  return String(value)
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#039;");
-}
-
-function displayDate(dateAdded) {
-  if (!dateAdded?.value) return "Date unknown";
-  const { precision = "day", value } = dateAdded;
-
-  if (precision === "year") return value;
-  if (precision === "month") {
-    const [year, month] = value.split("-").map(Number);
-    return new Intl.DateTimeFormat("en", { month: "long", year: "numeric", timeZone: "UTC" })
-      .format(new Date(Date.UTC(year, month - 1, 1)));
-  }
-
-  const [year, month, day] = value.split("-").map(Number);
-  return new Intl.DateTimeFormat("en", { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" })
-    .format(new Date(Date.UTC(year, month - 1, day)));
-}
-
-function sortableDate(dateAdded) {
-  if (!dateAdded?.value) return "0000-00-00";
-  const { precision = "day", value } = dateAdded;
-  if (precision === "year") return `${value}-00-00`;
-  if (precision === "month") return `${value}-00`;
-  return value;
-}
-
-function yearAdded(toy) {
-  const value = toy?.dateAdded?.value;
-  const match = typeof value === "string" ? value.match(/^(\d{4})/) : null;
-  return match ? match[1] : "";
-}
-
-function statusState(toy) {
-  const state = toy?.collectionStatus?.state;
-  return ["active", "lost", "memory"].includes(state) ? state : "active";
-}
-
-function statusLabel(state) {
-  if (state === "lost") return "Lost";
-  if (state === "memory") return "In Our Memory";
-  return "Active";
-}
-
-function statusDate(toy) {
-  const state = statusState(toy);
-  const status = toy.collectionStatus || {};
-  if (state === "lost") return status.lostDate || null;
-  if (state === "memory") return status.endDate || null;
-  return null;
-}
-
-function cardDateText(toy) {
-  const joined = displayDate(toy.dateAdded);
-  const finalDate = statusDate(toy);
-  return finalDate?.value
-    ? `${joined} – ${displayDate(finalDate)}`
-    : `Joined ${joined}`;
-}
-
-function clampNumber(value, min, max, fallback) {
-  const number = Number(value);
-  return Number.isFinite(number) ? Math.min(max, Math.max(min, number)) : fallback;
-}
-
-function legacyPosition(toy, viewName) {
-  const value = viewName === "profile" ? toy.profilePosition : toy.galleryPosition;
-  if (typeof value !== "string") return null;
-  const match = value.trim().match(/^(\d+(?:\.\d+)?)%\s+(\d+(?:\.\d+)?)%$/);
-  if (!match) return null;
-  return { x: Number(match[1]), y: Number(match[2]) };
-}
-
-function photoSettings(toy, viewName) {
-  const saved = toy.photoDisplay?.[viewName] || {};
-  const legacy = legacyPosition(toy, viewName) || {};
-  const legacyZoom = viewName === "profile" ? toy.profileZoom : toy.galleryZoom;
-  const fit = saved.fit === "contain" ? "contain" : "cover";
-
-  return {
-    fit,
-    x: clampNumber(saved.x ?? legacy.x, 0, 100, 50),
-    y: clampNumber(saved.y ?? legacy.y, 0, 100, 50),
-    zoom: fit === "contain" ? 1 : clampNumber(saved.zoom ?? legacyZoom, 1, 1.7, 1)
+  const els = {
+    search: document.querySelector("#searchInput"),
+    sort: document.querySelector("#sortSelect"),
+    filterButton: document.querySelector("#filterButton"),
+    filterPanel: document.querySelector("#filterPanel"),
+    filterGroups: document.querySelector("#filterGroups"),
+    activeFilters: document.querySelector("#activeFilterChips"),
+    clearFilters: document.querySelector("#clearFilters"),
+    filterCount: document.querySelector("#filterCount"),
+    count: document.querySelector("#collectionCount"),
+    footerCount: document.querySelector("#footerCount"),
+    gallery: document.querySelector("#collectionGrid"),
+    empty: document.querySelector("#emptyState"),
+    noResults: document.querySelector("#noResults"),
+    dialog: document.querySelector("#toyDialog"),
+    dialogContent: document.querySelector("#dialogContent"),
+    closeDialog: document.querySelector("#toyDialog .dialog-close")
   };
-}
 
-function imageMarkup(toy, className = "", viewName = "gallery") {
-  if (!toy.image) {
-    return `<div class="photo-placeholder ${className}" aria-label="No photo available">♡</div>`;
+  let toys = [];
+  const selectedFilters = {
+    status: new Set(),
+    species: new Set(),
+    spawnLocation: new Set(),
+    year: new Set()
+  };
+
+  function escapeHtml(value = "") {
+    return String(value)
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("'", "&#039;");
   }
 
-  const settings = photoSettings(toy, viewName);
-  const style = `object-fit:${settings.fit};object-position:${settings.x}% ${settings.y}%;transform-origin:${settings.x}% ${settings.y}%;transform:scale(${settings.zoom});`;
+  function slugify(value = "toy") {
+    return String(value)
+      .toLowerCase()
+      .normalize("NFKD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "") || "toy";
+  }
 
-  return `<img class="${className}" src="./images/${encodeURIComponent(toy.image)}" alt="${escapeHtml(toy.name)}" style="${style}">`;
-}
+  // Be deliberately generous here so older JSON spellings keep working.
+  // Examples supported: memory, in-memory, in_our_memory, in-our-memory,
+  // "In Our Memory", memorial.
+  function normalizeStatus(value) {
+    const compact = String(value || "active")
+      .trim()
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "");
+    if (compact === "lost") return "lost";
+    if (["memory", "inmemory", "inourmemory", "memorial"].includes(compact)) return "memory";
+    return "active";
+  }
 
-function cardStatusMarkup(toy) {
-  const state = statusState(toy);
-  if (state === "active") return "";
-  return `<div class="card-status card-status-${state}">${escapeHtml(statusLabel(state))}</div>`;
-}
-
-function cardMarkup(toy) {
-  const firstFact = toy.funFacts?.[0] ? `<p class="fact-preview">${escapeHtml(toy.funFacts[0])}</p>` : "";
-  const state = statusState(toy);
-  const statusClass = state === "active" ? "" : ` status-${state}`;
-
-  return `
-    <article class="toy-card${statusClass}">
-      <button class="card-button" type="button" data-toy-id="${escapeHtml(toy.id)}" aria-label="Open details for ${escapeHtml(toy.name)}">
-        <div class="photo-wrap">
-          ${imageMarkup(toy, "", "gallery")}
-          ${cardStatusMarkup(toy)}
-        </div>
-        <div class="card-body">
-          <div class="card-date">${escapeHtml(cardDateText(toy))}</div>
-          <h2 class="toy-name">${escapeHtml(toy.name)}</h2>
-          ${firstFact}
-        </div>
-      </button>
-    </article>`;
-}
-
-function searchMatches(toy, query) {
-  if (!query) return true;
-  const relativeSearchText = (toy.relatives || []).flatMap((relative) => {
-    const linkedToy = toys.find((item) => item.id === relative?.toyId);
-    return [relative?.relationship, linkedToy?.name];
-  });
-  const status = toy.collectionStatus || {};
-  const haystack = [
-    toy.name,
-    toy.officialModel,
-    toy.species,
-    toy.spawnLocation,
-    status.lastKnownLocation,
-    statusLabel(statusState(toy)),
-    status.lostDate?.value,
-    status.endDate?.value,
-    yearAdded(toy),
-    ...(toy.funFacts || []),
-    ...relativeSearchText
-  ]
-    .filter(Boolean)
-    .join(" ")
-    .toLowerCase();
-  return haystack.includes(query);
-}
-
-function uniqueTextValues(values) {
-  const byLower = new Map();
-  values.forEach((value) => {
-    const clean = typeof value === "string" ? value.trim() : "";
-    if (clean && !byLower.has(clean.toLocaleLowerCase())) byLower.set(clean.toLocaleLowerCase(), clean);
-  });
-  return [...byLower.values()].sort((a, b) => a.localeCompare(b, undefined, { sensitivity: "base" }));
-}
-
-function filterDefinitions() {
-  return [
-    {
-      key: "status",
-      label: "Status",
-      options: [
-        { value: "active", label: "Active" },
-        { value: "lost", label: "Lost" },
-        { value: "memory", label: "In Our Memory" }
-      ]
-    },
-    {
-      key: "species",
-      label: "Species",
-      options: uniqueTextValues(toys.map((toy) => toy.species)).map((label) => ({ value: label.toLocaleLowerCase(), label }))
-    },
-    {
-      key: "spawnLocation",
-      label: "Spawn Location",
-      options: uniqueTextValues(toys.map((toy) => toy.spawnLocation)).map((label) => ({ value: label.toLocaleLowerCase(), label }))
-    },
-    {
-      key: "year",
-      label: "Year added",
-      options: [...new Set(toys.map(yearAdded).filter(Boolean))]
-        .sort((a, b) => b.localeCompare(a))
-        .map((value) => ({ value, label: value }))
+  function normalizeDate(value) {
+    if (!value) return null;
+    if (typeof value === "string") {
+      const raw = value.trim();
+      if (/^\d{4}-\d{2}-\d{2}$/.test(raw)) return { precision: "day", value: raw };
+      if (/^\d{4}-\d{2}$/.test(raw)) return { precision: "month", value: raw };
+      if (/^\d{4}$/.test(raw)) return { precision: "year", value: raw };
+      return null;
     }
-  ];
-}
+    if (typeof value === "object" && value.value) {
+      const raw = String(value.value).trim();
+      let precision = String(value.precision || "").toLowerCase();
+      if (["exact", "date", "full"].includes(precision)) precision = "day";
+      if (!["day", "month", "year"].includes(precision)) {
+        precision = /^\d{4}$/.test(raw) ? "year" : /^\d{4}-\d{2}$/.test(raw) ? "month" : "day";
+      }
+      return { precision, value: raw };
+    }
+    return null;
+  }
 
-function filterValueForToy(toy, key) {
-  if (key === "status") return statusState(toy);
-  if (key === "species") return (toy.species || "").trim().toLocaleLowerCase();
-  if (key === "spawnLocation") return (toy.spawnLocation || "").trim().toLocaleLowerCase();
-  if (key === "year") return yearAdded(toy);
-  return "";
-}
+  function normalizePhotoDisplay(value) {
+    const normalizeOne = (part) => {
+      const fit = part?.fit === "contain" ? "contain" : "cover";
+      return {
+        fit,
+        x: Number.isFinite(Number(part?.x)) ? Number(part.x) : 50,
+        y: Number.isFinite(Number(part?.y)) ? Number(part.y) : 50,
+        zoom: fit === "contain" ? 1 : (Number.isFinite(Number(part?.zoom)) ? Number(part.zoom) : 1)
+      };
+    };
+    return {
+      gallery: normalizeOne(value?.gallery),
+      profile: normalizeOne(value?.profile)
+    };
+  }
 
-function filtersMatch(toy) {
-  return Object.entries(selectedFilters).every(([key, selected]) => {
-    if (selected.size === 0) return true;
-    return selected.has(filterValueForToy(toy, key));
-  });
-}
+  function normalizeGallery(value) {
+    if (!Array.isArray(value)) return [];
+    return value
+      .map(item => typeof item === "string" ? item : item?.filename || item?.image || "")
+      .map(item => String(item).trim())
+      .filter(Boolean);
+  }
 
-function selectedFilterTotal() {
-  return Object.values(selectedFilters).reduce((total, selected) => total + selected.size, 0);
-}
+  function normalizeToy(raw, index) {
+    const id = String(raw.id || slugify(raw.name || `toy-${index + 1}`));
+    return {
+      ...raw,
+      id,
+      name: String(raw.name || "Unnamed soft toy"),
+      officialModel: String(raw.officialModel || raw.model || raw.brandModel || "").trim(),
+      image: String(raw.image || raw.photo || "").trim(),
+      gallery: normalizeGallery(raw.gallery || raw.galleryImages || raw.galleryPhotos),
+      species: String(raw.species || "").trim(),
+      spawnLocation: String(raw.spawnLocation || raw.spawn || "").trim(),
+      dateAdded: normalizeDate(raw.dateAdded || raw.acquiredDate || raw.joinedDate),
+      status: normalizeStatus(raw.status || raw.collectionStatus),
+      lastKnownLocation: String(raw.lastKnownLocation || "").trim(),
+      lostDate: normalizeDate(raw.lostDate || raw.dateLost),
+      endDate: normalizeDate(raw.endDate || raw.memorialDate || raw.dateEnded),
+      rejoinDate: normalizeDate(raw.rejoinDate || raw.readdedDate || raw.reAddDate || raw.dateRejoined),
+      funFacts: Array.isArray(raw.funFacts || raw.facts) ? (raw.funFacts || raw.facts).map(String).filter(Boolean) : [],
+      relatives: Array.isArray(raw.relatives)
+        ? raw.relatives
+            .map(r => ({
+              relationship: String(r.relationship || r.relation || "").trim(),
+              toyId: String(r.toyId || r.id || "").trim()
+            }))
+            .filter(r => r.relationship && r.toyId)
+        : [],
+      photoDisplay: normalizePhotoDisplay(raw.photoDisplay)
+    };
+  }
 
-function renderFilterPanel() {
-  filterGroups.innerHTML = filterDefinitions().map((group) => {
-    if (group.options.length === 0) return "";
-    const options = group.options.map((option) => {
-      const checked = selectedFilters[group.key].has(option.value) ? " checked" : "";
+  function formatDate(dateObj) {
+    const d = normalizeDate(dateObj);
+    if (!d) return "";
+    try {
+      if (d.precision === "year") return d.value.slice(0, 4);
+      if (d.precision === "month") {
+        const [year, month] = d.value.split("-").map(Number);
+        return new Intl.DateTimeFormat("en-US", { month: "long", year: "numeric", timeZone: "UTC" })
+          .format(new Date(Date.UTC(year, month - 1, 1)));
+      }
+      const [year, month, day] = d.value.split("-").map(Number);
+      return new Intl.DateTimeFormat("en-US", { month: "long", day: "numeric", year: "numeric", timeZone: "UTC" })
+        .format(new Date(Date.UTC(year, month - 1, day)));
+    } catch {
+      return d.value;
+    }
+  }
+
+  function dateSortValue(dateObj) {
+    const d = normalizeDate(dateObj);
+    if (!d) return 0;
+    if (d.precision === "year") return Number(d.value.slice(0, 4)) * 10000;
+    if (d.precision === "month") return Number(d.value.replace("-", "")) * 100;
+    return Number(d.value.replaceAll("-", ""));
+  }
+
+  function yearAdded(toy) {
+    const d = normalizeDate(toy.dateAdded);
+    return d?.value?.slice(0, 4) || "";
+  }
+
+  function currentEndDate(toy) {
+    if (toy.status === "lost") return toy.lostDate || toy.endDate;
+    if (toy.status === "memory") return toy.endDate || toy.lostDate;
+    if (toy.rejoinDate) return toy.endDate || toy.lostDate;
+    return null;
+  }
+
+  function fullHistoryText(toy) {
+    const start = formatDate(toy.dateAdded);
+    const end = formatDate(currentEndDate(toy));
+    const rejoin = formatDate(toy.rejoinDate);
+    if (rejoin) {
+      if (start && end) return `${start} – ${end}, Rejoined ${rejoin}`;
+      if (start) return `${start}, Rejoined ${rejoin}`;
+      return `Rejoined ${rejoin}`;
+    }
+    if (start && end) return `${start} – ${end}`;
+    if (start) return `Joined ${start}`;
+    if (end) return end;
+    return "";
+  }
+
+  function cardHistoryText(toy) {
+    const rejoin = formatDate(toy.rejoinDate);
+    if (rejoin) return `Rejoined ${rejoin}`;
+    const start = formatDate(toy.dateAdded);
+    const end = formatDate(currentEndDate(toy));
+    if (start && end) return `${start} – ${end}`;
+    return start ? `Joined ${start}` : "";
+  }
+
+  function statusLabel(status) {
+    if (status === "lost") return "Lost";
+    if (status === "memory") return "In Our Memory";
+    return "Active";
+  }
+
+  function statusIcon(status) {
+    if (status === "memory") return "♡";
+    if (status === "lost") return "⌖";
+    return "";
+  }
+
+  function imageStyle(display) {
+    const fit = display?.fit === "contain" ? "contain" : "cover";
+    const x = Number(display?.x ?? 50);
+    const y = Number(display?.y ?? 50);
+    const zoom = fit === "contain" ? 1 : Number(display?.zoom ?? 1);
+    return `object-fit:${fit};object-position:${x}% ${y}%;transform:scale(${zoom});`;
+  }
+
+  function imageMarkup(toy, kind = "gallery", className = "") {
+    if (!toy.image) return `<div class="photo-placeholder ${className}" aria-hidden="true">♡</div>`;
+    const display = toy.photoDisplay?.[kind] || { fit: "cover", x: 50, y: 50, zoom: 1 };
+    return `<img class="${className}" src="./images/${encodeURIComponent(toy.image)}" alt="${escapeHtml(toy.name)}" style="${imageStyle(display)}">`;
+  }
+
+  function cardMarkup(toy) {
+    const badge = toy.status === "active"
+      ? ""
+      : `<span class="card-status card-status-${toy.status === "memory" ? "memory" : "lost"}">${escapeHtml(statusLabel(toy.status))}</span>`;
+    const history = cardHistoryText(toy);
+    return `
+      <article class="toy-card">
+        <button class="card-button" type="button" data-toy-id="${escapeHtml(toy.id)}" aria-label="Open ${escapeHtml(toy.name)}">
+          <div class="photo-wrap">
+            ${imageMarkup(toy, "gallery")}
+            ${badge}
+          </div>
+          <div class="card-body">
+            ${history ? `<div class="card-date">${escapeHtml(history)}</div>` : ""}
+            <h2 class="toy-name">${escapeHtml(toy.name)}</h2>
+          </div>
+        </button>
+      </article>`;
+  }
+
+  function matchesSearch(toy, query) {
+    if (!query) return true;
+    const relativeNames = toy.relatives.map(r => toys.find(t => t.id === r.toyId)?.name || "").join(" ");
+    const haystack = [
+      toy.name,
+      toy.officialModel,
+      toy.species,
+      toy.spawnLocation,
+      toy.lastKnownLocation,
+      statusLabel(toy.status),
+      ...toy.funFacts,
+      ...toy.relatives.map(r => r.relationship),
+      relativeNames
+    ].join(" ").toLowerCase();
+    return haystack.includes(query.toLowerCase());
+  }
+
+  function matchesFilters(toy) {
+    const checks = [
+      ["status", toy.status],
+      ["species", toy.species],
+      ["spawnLocation", toy.spawnLocation],
+      ["year", yearAdded(toy)]
+    ];
+    return checks.every(([key, value]) => selectedFilters[key].size === 0 || selectedFilters[key].has(value));
+  }
+
+  function filteredToys() {
+    const query = els.search?.value.trim() || "";
+    const list = toys.filter(toy => matchesSearch(toy, query) && matchesFilters(toy));
+    const sort = els.sort?.value || "added-desc";
+    list.sort((a, b) => {
+      if (sort === "added-asc") return dateSortValue(a.dateAdded) - dateSortValue(b.dateAdded) || a.name.localeCompare(b.name);
+      if (sort === "name-asc") return a.name.localeCompare(b.name, undefined, { sensitivity: "base" });
+      return dateSortValue(b.dateAdded) - dateSortValue(a.dateAdded) || a.name.localeCompare(b.name);
+    });
+    return list;
+  }
+
+  function renderGallery() {
+    const list = filteredToys();
+    els.gallery.innerHTML = list.map(cardMarkup).join("");
+
+    const countText = `${list.length} soft toy${list.length === 1 ? "" : "s"}`;
+    if (els.count) els.count.textContent = countText;
+    if (els.footerCount) els.footerCount.textContent = `${toys.length} total`;
+
+    const collectionEmpty = toys.length === 0;
+    if (els.empty) els.empty.hidden = !collectionEmpty;
+    if (els.noResults) els.noResults.hidden = collectionEmpty || list.length !== 0;
+    if (els.gallery) els.gallery.hidden = collectionEmpty || list.length === 0;
+
+    els.gallery.querySelectorAll(".card-button").forEach(button => {
+      button.addEventListener("click", () => openToy(button.dataset.toyId));
+    });
+  }
+
+  function filterOptionsFor(key) {
+    if (key === "status") {
+      const available = new Set(toys.map(t => t.status));
+      return ["active", "lost", "memory"]
+        .filter(v => available.has(v))
+        .map(v => ({ value: v, label: statusLabel(v) }));
+    }
+    if (key === "year") {
+      return [...new Set(toys.map(yearAdded).filter(Boolean))]
+        .sort((a, b) => Number(b) - Number(a))
+        .map(v => ({ value: v, label: v }));
+    }
+    return [...new Set(toys.map(t => t[key]).filter(Boolean))]
+      .sort((a, b) => a.localeCompare(b))
+      .map(v => ({ value: v, label: v }));
+  }
+
+  function renderFilterPanel() {
+    const groups = [
+      ["status", "Status"],
+      ["species", "Species"],
+      ["spawnLocation", "Spawn Location"],
+      ["year", "Year Added"]
+    ];
+
+    els.filterGroups.innerHTML = groups.map(([key, label]) => {
+      const options = filterOptionsFor(key);
+      if (!options.length) return "";
       return `
-        <label class="filter-option">
-          <input type="checkbox" data-filter-key="${escapeHtml(group.key)}" value="${escapeHtml(option.value)}"${checked}>
-          <span class="filter-check" aria-hidden="true">✓</span>
-          <span>${escapeHtml(option.label)}</span>
-        </label>`;
+        <fieldset class="filter-group">
+          <legend>${escapeHtml(label)}</legend>
+          <div class="filter-options">
+            ${options.map(option => `
+              <label class="filter-option">
+                <input type="checkbox" data-filter-key="${key}" value="${escapeHtml(option.value)}" ${selectedFilters[key].has(option.value) ? "checked" : ""}>
+                <span class="filter-check" aria-hidden="true">✓</span>
+                <span>${escapeHtml(option.label)}</span>
+              </label>`).join("")}
+          </div>
+        </fieldset>`;
     }).join("");
 
-    return `
-      <fieldset class="filter-group">
-        <legend>${escapeHtml(group.label)}</legend>
-        <div class="filter-options">${options}</div>
-      </fieldset>`;
-  }).join("");
-
-  updateFilterChrome();
-}
-
-function filterLabel(key, value) {
-  if (key === "status") return statusLabel(value);
-  const group = filterDefinitions().find((definition) => definition.key === key);
-  return group?.options.find((option) => option.value === value)?.label || value;
-}
-
-function filterGroupLabel(key) {
-  if (key === "year") return "Year";
-  if (key === "spawnLocation") return "Spawn Location";
-  return key.charAt(0).toUpperCase() + key.slice(1);
-}
-
-function renderFilterChips() {
-  const chips = [];
-  Object.entries(selectedFilters).forEach(([key, selected]) => {
-    selected.forEach((value) => {
-      chips.push(`
-        <button class="filter-chip" type="button" data-remove-filter-key="${escapeHtml(key)}" data-remove-filter-value="${escapeHtml(value)}">
-          <span>${escapeHtml(filterGroupLabel(key))}: ${escapeHtml(filterLabel(key, value))}</span>
-          <span class="filter-chip-x" aria-hidden="true">×</span>
-        </button>`);
+    els.filterGroups.querySelectorAll("input[type=checkbox]").forEach(input => {
+      input.addEventListener("change", () => {
+        const set = selectedFilters[input.dataset.filterKey];
+        input.checked ? set.add(input.value) : set.delete(input.value);
+        renderActiveFilters();
+        renderGallery();
+      });
     });
-  });
-  activeFilterChips.innerHTML = chips.join("");
-  activeFilterChips.hidden = chips.length === 0;
-}
-
-function updateFilterChrome() {
-  const total = selectedFilterTotal();
-  filterCount.textContent = total;
-  filterCount.hidden = total === 0;
-  filterButton.classList.toggle("has-filters", total > 0);
-  clearFilters.disabled = total === 0;
-  renderFilterChips();
-}
-
-function setFilterPanel(open) {
-  filterPanel.hidden = !open;
-  filterButton.setAttribute("aria-expanded", String(open));
-  filterMenuWrap.classList.toggle("is-open", open);
-}
-
-function updateEmptyStates(visibleCount, hasConstraints) {
-  emptyState.hidden = toys.length !== 0;
-  noResults.hidden = !(toys.length > 0 && hasConstraints && visibleCount === 0);
-}
-
-function render() {
-  const query = searchInput.value.trim().toLowerCase();
-  const hasFilters = selectedFilterTotal() > 0;
-  let visible = toys.filter((toy) => searchMatches(toy, query) && filtersMatch(toy));
-
-  visible.sort((a, b) => {
-    switch (sortSelect.value) {
-      case "added-asc": return sortableDate(a.dateAdded).localeCompare(sortableDate(b.dateAdded));
-      case "name-asc": return a.name.localeCompare(b.name, undefined, { sensitivity: "base" });
-      default: return sortableDate(b.dateAdded).localeCompare(sortableDate(a.dateAdded));
-    }
-  });
-
-  grid.innerHTML = visible.map(cardMarkup).join("");
-
-  const basicLabel = `${visible.length} soft toy${visible.length === 1 ? "" : "s"}`;
-  count.textContent = (query || hasFilters) ? `${basicLabel} found` : basicLabel;
-  footerCount.textContent = `${toys.length} in the collection`;
-  updateFilterChrome();
-  updateEmptyStates(visible.length, Boolean(query || hasFilters));
-}
-
-function infoMarkup(toy) {
-  const items = [];
-  const state = statusState(toy);
-  const status = toy.collectionStatus || {};
-
-  if (toy.species) {
-    items.push(`<div class="profile-info-item"><dt>Species</dt><dd>${escapeHtml(toy.species)}</dd></div>`);
+    renderActiveFilters();
   }
-  if (toy.spawnLocation) {
-    items.push(`<div class="profile-info-item"><dt>Spawn Location</dt><dd>${escapeHtml(toy.spawnLocation)}</dd></div>`);
-  }
-  if (state === "lost" && status.lastKnownLocation) {
-    items.push(`<div class="profile-info-item"><dt>Last Known Location</dt><dd>${escapeHtml(status.lastKnownLocation)}</dd></div>`);
-  }
-  return items.length ? `<dl class="profile-info">${items.join("")}</dl>` : "";
-}
 
-function profileStatusMarkup(toy) {
-  const state = statusState(toy);
-  if (state === "active") return "";
-  const symbol = state === "lost" ? "⌕" : "♡";
-  return `<div class="profile-status profile-status-${state}"><span aria-hidden="true">${symbol}</span>${escapeHtml(statusLabel(state))}</div>`;
-}
+  function renderActiveFilters() {
+    const labels = { status: "Status", species: "Species", spawnLocation: "Spawn", year: "Year" };
+    const chips = [];
+    let selectedCount = 0;
 
-function relativesMarkup(toy) {
-  if (!Array.isArray(toy.relatives) || toy.relatives.length === 0) return "";
-
-  const relatives = toy.relatives
-    .filter((relative) => relative && relative.relationship && relative.toyId)
-    .map((relative) => {
-      const linkedToy = toys.find((item) => item.id === relative.toyId);
-      if (!linkedToy) {
-        return `<span class="relative-link relative-missing"><span>${escapeHtml(relative.relationship)}</span><strong>Unknown soft toy</strong></span>`;
+    for (const [key, set] of Object.entries(selectedFilters)) {
+      selectedCount += set.size;
+      for (const value of set) {
+        const text = key === "status" ? statusLabel(value) : value;
+        chips.push(`
+          <button class="filter-chip" type="button" data-key="${key}" data-value="${escapeHtml(value)}">
+            ${escapeHtml(labels[key])}: ${escapeHtml(text)} <span class="filter-chip-x" aria-hidden="true">×</span>
+          </button>`);
       }
-      return `<button class="relative-link" type="button" data-relative-id="${escapeHtml(linkedToy.id)}"><span>${escapeHtml(relative.relationship)}</span><strong>${escapeHtml(linkedToy.name)}</strong></button>`;
-    })
-    .join("");
-
-  return relatives
-    ? `<section class="relatives-section"><h3 class="facts-title">Relatives</h3><div class="relatives-list">${relatives}</div></section>`
-    : "";
-}
-
-function resetProfileScroll() {
-  dialog.scrollTop = 0;
-  dialogContent.scrollTop = 0;
-
-  requestAnimationFrame(() => {
-    dialog.scrollTop = 0;
-    dialogContent.scrollTop = 0;
-    if (typeof dialog.scrollTo === "function") {
-      dialog.scrollTo({ top: 0, left: 0, behavior: "auto" });
     }
-  });
-}
 
-function showToy(id) {
-  const toy = toys.find((item) => item.id === id);
-  if (!toy) return;
+    els.activeFilters.innerHTML = chips.join("");
+    els.activeFilters.hidden = chips.length === 0;
+    if (els.clearFilters) els.clearFilters.disabled = chips.length === 0;
+    if (els.filterCount) {
+      els.filterCount.textContent = String(selectedCount);
+      els.filterCount.hidden = selectedCount === 0;
+    }
+    els.filterButton.classList.toggle("has-filters", selectedCount > 0);
 
-  const facts = toy.funFacts?.length
-    ? `<h3 class="facts-title">Little facts</h3><ul class="facts-list">${toy.funFacts.map((fact) => `<li>${escapeHtml(fact)}</li>`).join("")}</ul>`
-    : `<h3 class="facts-title">Little facts</h3><p class="dialog-official">No extra notes yet.</p>`;
-
-  const profilePhoto = toy.image
-    ? `<div class="dialog-photo-wrap">${imageMarkup(toy, "dialog-photo", "profile")}</div>`
-    : `<div class="photo-placeholder dialog-photo-wrap" aria-hidden="true">♡</div>`;
-
-  dialogContent.innerHTML = `
-    ${profilePhoto}
-    <div class="dialog-copy">
-      <div class="dialog-kicker">${escapeHtml(cardDateText(toy))}</div>
-      <h2>${escapeHtml(toy.name)}</h2>
-      ${profileStatusMarkup(toy)}
-      ${toy.officialModel ? `<p class="dialog-official">${escapeHtml(toy.officialModel)}</p>` : ""}
-      ${infoMarkup(toy)}
-      ${relativesMarkup(toy)}
-      ${facts}
-    </div>`;
-
-  resetProfileScroll();
-  if (!dialog.open) dialog.showModal();
-  resetProfileScroll();
-}
-
-dialogContent.addEventListener("click", (event) => {
-  const relativeButton = event.target.closest("[data-relative-id]");
-  if (relativeButton) showToy(relativeButton.dataset.relativeId);
-});
-
-grid.addEventListener("click", (event) => {
-  const button = event.target.closest("[data-toy-id]");
-  if (button) showToy(button.dataset.toyId);
-});
-
-filterButton.addEventListener("click", () => {
-  setFilterPanel(filterPanel.hidden);
-});
-
-filterGroups.addEventListener("change", (event) => {
-  const input = event.target.closest("[data-filter-key]");
-  if (!input) return;
-  const key = input.dataset.filterKey;
-  if (!selectedFilters[key]) return;
-  if (input.checked) selectedFilters[key].add(input.value);
-  else selectedFilters[key].delete(input.value);
-  render();
-});
-
-clearFilters.addEventListener("click", () => {
-  Object.values(selectedFilters).forEach((set) => set.clear());
-  renderFilterPanel();
-  render();
-});
-
-activeFilterChips.addEventListener("click", (event) => {
-  const button = event.target.closest("[data-remove-filter-key]");
-  if (!button) return;
-  const key = button.dataset.removeFilterKey;
-  const value = button.dataset.removeFilterValue;
-  selectedFilters[key]?.delete(value);
-  renderFilterPanel();
-  render();
-});
-
-document.addEventListener("click", (event) => {
-  if (!filterPanel.hidden && !filterMenuWrap.contains(event.target)) setFilterPanel(false);
-});
-
-document.addEventListener("keydown", (event) => {
-  if (event.key === "Escape" && !filterPanel.hidden && !dialog.open) {
-    setFilterPanel(false);
-    filterButton.focus();
+    els.activeFilters.querySelectorAll(".filter-chip").forEach(button => {
+      button.addEventListener("click", () => {
+        selectedFilters[button.dataset.key].delete(button.dataset.value);
+        renderFilterPanel();
+        renderGallery();
+      });
+    });
   }
-});
 
-searchInput.addEventListener("input", render);
-sortSelect.addEventListener("change", render);
-dialogClose.addEventListener("click", () => dialog.close());
-dialog.addEventListener("click", (event) => {
-  if (event.target === dialog) dialog.close();
-});
+  function relativeMarkup(relative) {
+    const target = toys.find(t => t.id === relative.toyId);
+    if (!target) {
+      return `<span class="relative-link relative-missing"><span>${escapeHtml(relative.relationship)}</span><strong>Unknown toy</strong></span>`;
+    }
+    return `
+      <button type="button" class="relative-link" data-relative-id="${escapeHtml(target.id)}">
+        <span>${escapeHtml(relative.relationship)}</span>
+        <strong>${escapeHtml(target.name)}</strong>
+      </button>`;
+  }
 
-fetch(DATA_URL, { cache: "no-store" })
-  .then((response) => {
-    if (!response.ok) throw new Error(`Could not load ${DATA_URL}`);
-    return response.json();
-  })
-  .then((data) => {
-    toys = Array.isArray(data) ? data : [];
-    renderFilterPanel();
-    render();
-  })
-  .catch((error) => {
-    console.error(error);
-    grid.innerHTML = `<section class="empty-state" style="grid-column:1/-1"><h2>Collection data could not be loaded</h2><p>Check that <code>soft-toys/data/toys.json</code> exists and contains valid JSON.</p></section>`;
+  function extraGalleryMarkup(toy) {
+    if (!toy.gallery.length) return "";
+    return `
+      <section class="profile-gallery-section">
+        <h3 class="facts-title">Gallery</h3>
+        <div class="profile-gallery">
+          ${toy.gallery.map(filename => `
+            <a class="profile-gallery-item" href="./images/${encodeURIComponent(filename)}" target="_blank" rel="noopener">
+              <img src="./images/${encodeURIComponent(filename)}" alt="Another photo of ${escapeHtml(toy.name)}" loading="lazy">
+            </a>`).join("")}
+        </div>
+      </section>`;
+  }
+
+  function profileMarkup(toy) {
+    const statusBadge = toy.status === "active"
+      ? ""
+      : `<div class="profile-status profile-status-${toy.status === "memory" ? "memory" : "lost"}"><span aria-hidden="true">${statusIcon(toy.status)}</span>${escapeHtml(statusLabel(toy.status))}</div>`;
+    const history = fullHistoryText(toy);
+
+    const info = [];
+    if (toy.species) info.push(["Species", toy.species]);
+    if (toy.spawnLocation) info.push(["Spawn Location", toy.spawnLocation]);
+    if (toy.status === "lost" && toy.lastKnownLocation) info.push(["Last Known Location", toy.lastKnownLocation]);
+
+    return `
+      <div class="dialog-photo-wrap">
+        ${imageMarkup(toy, "profile", "dialog-photo")}
+      </div>
+      <div class="dialog-copy">
+        ${history ? `<div class="dialog-kicker">${escapeHtml(history)}</div>` : ""}
+        <h2>${escapeHtml(toy.name)}</h2>
+        ${toy.officialModel ? `<p class="dialog-official">${escapeHtml(toy.officialModel)}</p>` : ""}
+        ${statusBadge}
+
+        ${info.length ? `
+          <dl class="profile-info">
+            ${info.map(([label, value]) => `
+              <div class="profile-info-item">
+                <dt>${escapeHtml(label)}</dt>
+                <dd>${escapeHtml(value)}</dd>
+              </div>`).join("")}
+          </dl>` : ""}
+
+        ${toy.relatives.length ? `
+          <section class="relatives-section">
+            <h3 class="facts-title">Relatives</h3>
+            <div class="relatives-list">${toy.relatives.map(relativeMarkup).join("")}</div>
+          </section>` : ""}
+
+        ${toy.funFacts.length ? `
+          <section>
+            <h3 class="facts-title">Fun Facts</h3>
+            <ul class="facts-list">${toy.funFacts.map(fact => `<li>${escapeHtml(fact)}</li>`).join("")}</ul>
+          </section>` : ""}
+
+        ${extraGalleryMarkup(toy)}
+      </div>`;
+  }
+
+  function resetDialogScroll() {
+    els.dialog.scrollTop = 0;
+    els.dialogContent.scrollTop = 0;
+    requestAnimationFrame(() => {
+      els.dialog.scrollTop = 0;
+      els.dialogContent.scrollTop = 0;
+    });
+  }
+
+  function openToy(id) {
+    const toy = toys.find(t => t.id === id);
+    if (!toy) return;
+
+    els.dialogContent.innerHTML = profileMarkup(toy);
+    els.dialogContent.querySelectorAll(".relative-link[data-relative-id]").forEach(button => {
+      button.addEventListener("click", () => openToy(button.dataset.relativeId));
+    });
+
+    if (!els.dialog.open) els.dialog.showModal();
+    resetDialogScroll();
+  }
+
+  function closeDialog() {
+    if (els.dialog.open) els.dialog.close();
+  }
+
+  async function load() {
+    try {
+      const response = await fetch(`${DATA_URL}?v=${Date.now()}`, { cache: "no-store" });
+      if (!response.ok) throw new Error(`Could not load collection (${response.status})`);
+      const data = await response.json();
+      const list = Array.isArray(data) ? data : Array.isArray(data.toys) ? data.toys : [];
+      toys = list.map(normalizeToy);
+      renderFilterPanel();
+      renderGallery();
+    } catch (error) {
+      console.error(error);
+      els.gallery.innerHTML = `<p class="load-error">I couldn't load the collection data. Try refreshing the page.</p>`;
+      if (els.count) els.count.textContent = "0 soft toys";
+      if (els.footerCount) els.footerCount.textContent = "0 total";
+    }
+  }
+
+  els.search?.addEventListener("input", renderGallery);
+  els.sort?.addEventListener("change", renderGallery);
+  els.filterButton?.addEventListener("click", () => {
+    const isOpen = !els.filterPanel.hidden;
+    els.filterPanel.hidden = isOpen;
+    els.filterButton.setAttribute("aria-expanded", String(!isOpen));
   });
+  els.clearFilters?.addEventListener("click", () => {
+    Object.values(selectedFilters).forEach(set => set.clear());
+    renderFilterPanel();
+    renderGallery();
+  });
+  els.closeDialog?.addEventListener("click", closeDialog);
+  els.dialog?.addEventListener("click", event => {
+    if (event.target === els.dialog) closeDialog();
+  });
+  els.dialog?.addEventListener("close", () => {
+    els.dialogContent.innerHTML = "";
+    els.dialog.scrollTop = 0;
+  });
+
+  load();
+})();

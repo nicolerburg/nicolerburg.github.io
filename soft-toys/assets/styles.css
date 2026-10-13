@@ -611,3 +611,332 @@ button.relative-link:hover { transform: translateY(-1px); background: #f0e2e6; }
   .profile-info { grid-template-columns: 1fr; }
   .header-doodle { right: 1%; top: -8%; }
 }
+
+/* Functional additions: extra profile photos + add/edit page.
+   Collection styling above is intentionally preserved from the previous site. */
+.profile-gallery-section { margin-top: 1.45rem; }
+.profile-gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: .7rem;
+}
+.profile-gallery-item {
+  display: block;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  border: 1px solid #ebdfd8;
+  border-radius: 1rem;
+  background: #f4eee9;
+}
+.profile-gallery-item img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform .15s ease;
+}
+.profile-gallery-item:hover img { transform: scale(1.025); }
+.load-error {
+  grid-column: 1 / -1;
+  margin: 3rem auto;
+  color: var(--muted);
+  text-align: center;
+}
+.hidden { display: none !important; }
+
+/* Add / edit page styles. These are scoped so they do not change the collection page. */
+.add-shell {
+  width: min(900px, calc(100% - 2rem));
+  margin: 0 auto;
+  padding: 3rem 0 4.5rem;
+}
+.add-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1.2rem;
+  margin-bottom: 1.6rem;
+}
+.add-header > div { min-width: 0; }
+.add-shell .eyebrow {
+  margin: 0 0 .4rem;
+  color: #c68f98;
+  font-size: .74rem;
+  font-weight: 700;
+  letter-spacing: .13em;
+  text-transform: uppercase;
+}
+.add-shell h1 {
+  margin: 0 0 .65rem;
+  font-family: var(--serif);
+  font-size: clamp(2.25rem, 7vw, 4rem);
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -.045em;
+}
+.add-shell .header-note {
+  max-width: 650px;
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.6;
+}
+.back-link {
+  flex: 0 0 auto;
+  color: var(--muted);
+  font-size: .9rem;
+  text-decoration: none;
+}
+.back-link:hover { color: var(--ink); }
+.edit-picker-card,
+.form-card {
+  margin-bottom: 1.1rem;
+  padding: 1.25rem;
+  border: 1px solid var(--line);
+  border-radius: 1.35rem;
+  background: rgba(255,253,249,.9);
+  box-shadow: 0 7px 22px rgba(93,73,67,.06);
+}
+.edit-picker-card > label {
+  display: block;
+  margin-bottom: .5rem;
+  font-weight: 700;
+}
+.edit-picker-card select,
+.field input,
+.field select,
+.field textarea,
+.compact-select {
+  width: 100%;
+  padding: .7rem .75rem;
+  border: 1px solid var(--line);
+  border-radius: .8rem;
+  outline: 0;
+  background: #fff;
+  color: var(--ink);
+}
+.edit-picker-card select:focus,
+.field input:focus,
+.field select:focus,
+.field textarea:focus,
+.compact-select:focus {
+  border-color: #d8b4bb;
+  box-shadow: 0 0 0 3px rgba(244,223,225,.55);
+}
+.form-card > h2 {
+  margin: 0 0 .95rem;
+  font-family: var(--serif);
+  font-size: 1.45rem;
+  font-weight: 500;
+}
+.field-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: .9rem;
+}
+.field { min-width: 0; }
+.field.full { grid-column: 1 / -1; }
+.field label,
+.field > span.label {
+  display: block;
+  margin-bottom: .38rem;
+  font-size: .85rem;
+  font-weight: 700;
+}
+.field small,
+.helper {
+  display: block;
+  margin-top: .35rem;
+  color: var(--muted);
+  font-size: .78rem;
+  line-height: 1.45;
+}
+.field textarea { min-height: 110px; resize: vertical; }
+.optional { color: var(--muted); font-weight: 400; }
+.flex-date {
+  display: grid;
+  grid-template-columns: 140px 1fr;
+  gap: .5rem;
+}
+.flex-date .date-value > * { width: 100%; }
+.photo-editor-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: .9rem;
+  margin-top: 1rem;
+}
+.photo-editor {
+  padding: .8rem;
+  border: 1px solid var(--line);
+  border-radius: 1rem;
+  background: #fffaf6;
+}
+.photo-editor h3 {
+  margin: 0 0 .55rem;
+  font-family: var(--round);
+  font-size: .88rem;
+  font-weight: 800;
+}
+.framing-preview {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  margin-bottom: .65rem;
+  overflow: hidden;
+  border-radius: .8rem;
+  background: #eee7e5;
+}
+.photo-editor.profile-editor .framing-preview { aspect-ratio: 16 / 10; }
+.framing-preview img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  transform-origin: center;
+}
+.photo-fit-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: .5rem;
+  align-items: center;
+}
+.range-row {
+  display: grid;
+  grid-template-columns: 90px 1fr 42px;
+  align-items: center;
+  gap: .45rem;
+  margin-top: .5rem;
+  font-size: .75rem;
+}
+.range-row output { color: var(--muted); text-align: right; }
+.small-button,
+.secondary-button,
+.primary-button,
+.danger-button {
+  padding: .58rem .8rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: #fff;
+  color: var(--ink);
+}
+.primary-button {
+  padding: .75rem 1.1rem;
+  border-color: #dfbbc1;
+  background: var(--blush);
+  font-weight: 800;
+}
+.secondary-button { background: #f8f4fa; }
+.danger-button { background: #fff4f6; color: #965267; }
+.small-button { padding: .45rem .65rem; font-size: .78rem; }
+.button-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .5rem;
+}
+.dynamic-row {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr auto;
+  gap: .5rem;
+  align-items: end;
+  margin-bottom: .55rem;
+}
+.dynamic-row .field label { font-size: .75rem; }
+.remove-row {
+  width: 38px;
+  height: 38px;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: #fff4f7;
+}
+.status-fields {
+  margin-top: .9rem;
+  padding-top: .9rem;
+  border-top: 1px dashed var(--line);
+}
+.checkbox-row {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  margin-top: .75rem;
+}
+.checkbox-row input { width: auto; }
+.gallery-manager {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(135px, 1fr));
+  gap: .65rem;
+  margin-top: .8rem;
+}
+.gallery-edit-item {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: .9rem;
+  background: #eee7e5;
+}
+.gallery-edit-item img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.gallery-edit-item button {
+  position: absolute;
+  top: .45rem;
+  right: .45rem;
+  width: 30px;
+  height: 30px;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(255,255,255,.92);
+  box-shadow: 0 2px 8px rgba(0,0,0,.12);
+}
+.gallery-edit-label {
+  position: absolute;
+  left: .45rem;
+  bottom: .45rem;
+  max-width: calc(100% - .9rem);
+  overflow: hidden;
+  padding: .25rem .45rem;
+  border-radius: 999px;
+  background: rgba(255,255,255,.88);
+  font-size: .66rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.current-photo-note {
+  display: flex;
+  align-items: center;
+  gap: .65rem;
+  margin-top: .5rem;
+  color: var(--muted);
+  font-size: .82rem;
+}
+.current-photo-note img {
+  width: 48px;
+  height: 48px;
+  border-radius: .65rem;
+  object-fit: cover;
+}
+.form-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: .8rem;
+  margin-top: 1.25rem;
+}
+.save-status { color: var(--muted); font-size: .84rem; line-height: 1.45; }
+
+@media (max-width: 720px) {
+  .add-shell { width: min(100% - 1rem, 900px); padding-top: 2rem; }
+  .field-grid, .photo-editor-grid { grid-template-columns: 1fr; }
+  .field.full { grid-column: auto; }
+  .dynamic-row { grid-template-columns: 1fr 1fr auto; }
+  .flex-date { grid-template-columns: 120px 1fr; }
+  .add-header { display: block; }
+  .back-link { display: inline-block; margin-bottom: .7rem; }
+  .form-actions { align-items: stretch; flex-direction: column; }
+  .primary-button { width: 100%; }
+}
+
+@media (max-width: 430px) {
+  .dynamic-row {
+    grid-template-columns: 1fr;
+    padding-bottom: .65rem;
+    border-bottom: 1px dashed var(--line);
+  }
+  .remove-row { width: auto; height: auto; padding: .45rem .65rem; border-radius: 999px; }
+}
